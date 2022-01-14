@@ -10,6 +10,11 @@ The steps to install GPG on your computer are the following:
 
 ## Generating your own new GPG Keys
 
+### Command Line or Terminal
+
+### GPG4Win Kleopatra
+
+
 
 
 [Back to Readme Index](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/README.md)
