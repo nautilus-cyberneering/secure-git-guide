@@ -3,6 +3,7 @@
 ## Installing GPG
 
 The steps to install GPG on your computer are the following:
+
 1. Download the necessary software for your Operating System at:
     - [Windows](https://gpg4win.org/download.html)
     - [Linux - Installed through terminal](https://linuxhint.com/gpg-command-ubuntu/)
@@ -11,6 +12,8 @@ The steps to install GPG on your computer are the following:
 ## GPG4Win Kleopatra
 
 ### Generating your own new GPG Keys
+
+---
 
 Generating your own new GPG Keys is extremely easy.
 Here is a series of screenshots of the process using the Kleopatra application for Windows.
@@ -39,6 +42,8 @@ Here is a series of screenshots of the process using the Kleopatra application f
 
 ### Creating a Revocation Certificate
 
+---
+
 ![012](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_012.png)
 
 ![013](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_013.png)
@@ -49,13 +54,10 @@ Here is a series of screenshots of the process using the Kleopatra application f
 
 ### Sample Public GPG Key
 
+---
+
 ![016](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_016.png)
 
 ## Command Line or Terminal
-
-
-
-
-
 
 [Back to Readme Index](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/README.md)
