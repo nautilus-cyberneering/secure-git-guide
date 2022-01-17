@@ -68,7 +68,11 @@ In order to generate your new keys you have two options:
 ### Default Setup
 
 ---
-Open the command line as an admin and type: gpg --gen-keys
+Open the command line as an admin and type:
+
+    ```terminal
+    gpg --gen-keys
+    ```
 
 ![cli001](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_001.png)
 
@@ -96,7 +100,11 @@ This option lets you:
 
 It automatically generates also a revocation certificate at the default location which is indicated at the final step.
 
-Open the command line as an admin and type: gpg --full-generate-keys
+Open the command line as an admin and type:
+
+    ```terminal
+    gpg --full-generate-keys
+    ```
 
 #### Defining the key type
 
