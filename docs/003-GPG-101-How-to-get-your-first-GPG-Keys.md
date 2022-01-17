@@ -37,6 +37,8 @@ Here is a series of screenshots of the process using the Kleopatra application f
 
 ![011](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_011.png)
 
+### Creating a Revocation Certificate
+
 ![012](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_012.png)
 
 ![013](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_013.png)
@@ -45,9 +47,11 @@ Here is a series of screenshots of the process using the Kleopatra application f
 
 ![015](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_015.png)
 
+### Sample Public GPG Key
+
 ![016](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_016.png)
 
-### Command Line or Terminal
+## Command Line or Terminal
 
 
 
