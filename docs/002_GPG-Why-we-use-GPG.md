@@ -1,6 +1,6 @@
 # GPG - Why we use GPG
 
-The main reason to use GPG in our daily work is to make sure that our contributions to the company's repositories belong of one of its active contributors or maintainers.
+The main reason to use GPG in our daily work is to make sure that our contributions to the company's repositories belong to one of its active contributors or maintainers.
 
 GPG is one of the options for commit signing used with GitHub.
 
