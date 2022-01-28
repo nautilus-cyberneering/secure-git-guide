@@ -12,7 +12,7 @@ It is the preferred option by our team members.
 
 ## Why to use it?
 
-![PROS&CONS](https://nautilus-cyberneering.de/wp-content/uploads/2022/01/ProsCons.jpg)
+![PROS&CONS](https://nautilus-cyberneering.de/wp-content/uploads/2022/01/Pro-Con-1500x600-1-1024x410.png)
 
 ### Advantages
 
