@@ -18,37 +18,68 @@ The steps to install GPG on your computer are the following:
 Generating your own new GPG Keys is extremely easy.
 Here is a series of screenshots of the process using the Kleopatra application for Windows.
 
+(1)
+
 ![001](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_001.png)
+
+(2)
 
 ![002](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_002.png)
 
+**It is extremely important to use a passphrase and more important if you use it to actually write it down somwhere so that you never loose it.**
+
+(3)
+
 ![003](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_003.png)
+
+(4)
 
 ![004](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_004.png)
 
+(5)
+
 ![005](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_005.png)
+
+(6)
 
 ![006](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_006.png)
 
+(7)
+
 ![007](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_007.png)
+
+(8)
 
 ![008](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_008.png)
 
+(9)
+
 ![009](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_009.png)
 
+(10)
+
 ![010](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_010.png)
+
+(11)
 
 ![011](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_011.png)
 
 ### Creating a Revocation Certificate
 
 ---
+(1)
 
 ![012](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_012.png)
 
+(2)
+
 ![013](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_013.png)
 
+(3)
+
 ![014](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_014.png)
+
+(4)
 
 ![015](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_015.png)
 
@@ -74,15 +105,27 @@ Open the command line as an admin and type:
     gpg --gen-keys
     ```
 
+(1)
+
 ![cli001](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_001.png)
+
+(2)
 
 ![cli002](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_002.png)
 
+(3)
+
 ![cli003](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_003.png)
+
+(4)
 
 ![cli004](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_004.png)
 
+(5)
+
 ![cli005](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_005.png)
+
+(6)
 
 ![cli006](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_006.png)
 
@@ -108,35 +151,59 @@ Open the command line as an admin and type:
 
 #### Defining the key type
 
+(1)
+
 ![cliFgk001](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_001.png)
+
+(2)
 
 ![cliFgk002](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_002.png)
 
 #### Defining the encryption level
 
+(3)
+
 ![cliFgk003](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_003.png)
+
+(4)
 
 ![cliFgk004](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_004.png)
 
 #### Defining the expiration date
 
+(5)
+
 ![cliFgk005](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_005.png)
 
+(6)
+
 ![cliFgk006](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_006.png)
+
+(7)
 
 ![cliFgk007](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_007.png)
 
 #### Defining the user ID to identify the key
 
+(8)
+
 ![cliFgk008](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_008.png)
+
+(9)
 
 ![cliFgk009](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_009.png)
 
+(10)
+
 ![cliFgk010](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_010.png)
+
+(11)
 
 ![cliFgk011](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_011.png)
 
 #### Final screen with revocation certificate location
+
+(12)
 
 ![cliFgk012](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/CLI_CREATE_fgk_012.png)
 

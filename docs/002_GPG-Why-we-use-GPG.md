@@ -2,6 +2,10 @@
 
 The main reason to use GPG in our daily work is to make sure that our contributions to the company's repositories belong to one of its active contributors or maintainers.
 
+We use it to prevent impersonation attacks.
+
+![Impersonation Attack](https://nautilus-cyberneering.de/wp-content/uploads/2022/01/impersonation-attack-1024x576.png)
+
 GPG is one of the options for commit signing used with GitHub.
 
 It is the preferred option by our team members.
@@ -29,5 +33,7 @@ Essentially there is one primary key, which is typically used only for signing a
 ### Disadvantage
 
 If your primary key is compromised or you lose it, your security has been breached and someone can impersonate you or you lose access to your digital "id" stemming from this key.... you may have to start building your digital reputation from scratch.
+
+Nevertheless, for this situation there exists the **revocation certificate** which is created from the start at the same time that you create your keys for the first time or at any given time for the individual keys you want to revoke. With this certificate you would have to go to the before mentioned GPG key servers and upload it, to publicly revoke the affected key or keys.
 
 [Back to Readme Index](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/README.md)
