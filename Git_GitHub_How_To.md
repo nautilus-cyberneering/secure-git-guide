@@ -27,6 +27,52 @@ Here you will find the following information:
 
 ### Git - Step by Step
 
+#### Daily commands
+
+##### Listing Branches
+
+- Locally:
+
+      git branch
+
+- Remote:
+
+      git branch -r
+
+- All branches remote and local:
+
+      git branch -a
+
+    Note: A good habit is to update your remote repositories information to make sure that you see all the remote repositories. You can this using the following command:
+
+        git fetch   
+
+##### Switching Branches
+
+- Local
+
+        git switch [branch_label]
+
+- Remote
+
+        git checkout 
+
+##### Deleting
+
+- Local Branches
+
+        git branch -d [branch_label]
+
+- Remote Branches
+
+        git push remote_name -d remote_branch_name
+
+##### Updating a remote branch through a commit
+
+-       git commit -a
+
+
+
 ### Git - Helpful Links
 
 **Cheatsheets:**
