@@ -52,7 +52,7 @@ Here are some good videos that explain the what and how of Git:
 
 In order to the the git repository ssh url you have to go to the repository, and select the green "Code" button, and here choose the "ssh" tab to then copy the url as shown in the following image:
 
-![Cloning](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/media_git/command-clone-01.png)
+![Cloning](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media_git/command-clone-01.png)
 
 You have to click on "Code" and then select "SSH" and copy the address which whould look something similar to this:
 
@@ -65,9 +65,6 @@ If you are running Windows you will have to activate the OPENSSH service and the
 
 - Setting Up SSH with GIT on Windows - <https://dev.to/bdbch/setting-up-ssh-and-git-on-windows-10-2khk>
 - How do I show my local GIT configuration - <https://stackoverflow.com/questions/12254076/how-do-i-show-my-global-git-configuration>
-
-
-
 
 #### Listing Branches
 
