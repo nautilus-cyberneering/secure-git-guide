@@ -66,6 +66,11 @@ If you are running Windows you will have to activate the OPENSSH service and the
 - Setting Up SSH with GIT on Windows - <https://dev.to/bdbch/setting-up-ssh-and-git-on-windows-10-2khk>
 - How do I show my local GIT configuration - <https://stackoverflow.com/questions/12254076/how-do-i-show-my-global-git-configuration>
 
+More on the "git clone":
+<https://www.git-scm.com/docs/git-clone>
+
+
+
 #### Listing Branches
 
 - Locally:
