@@ -1,5 +1,7 @@
 # GPG-Bootcamp :key: 🔒 :lock
 
+[![MegaLinter](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml)
+
 ## Repository Description
 
 Information relating to GPG and how we use it for projects and other purposes in our daily work.
