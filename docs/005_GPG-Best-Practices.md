@@ -153,4 +153,4 @@ This being one of the most used capabilities. It is recommended that you rotate 
 ---
 Another good idea is to set an expiration date not too far in the future in case that you were to not be able to revoke your certificate due to having lost your revocation certificate.
 
-[Back to Readme Index](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/README.md)
+[Back to Readme Index](../README.md)

@@ -44,4 +44,4 @@ More recent releases of GnuPG 2.x ("modern" and the now deprecated "stable" seri
 
 Note: Source [WIKIPEDIA](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
   
-[Back to Readme Index](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/README.md)
+[Back to Readme Index](../README.md)

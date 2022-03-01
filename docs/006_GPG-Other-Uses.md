@@ -15,4 +15,4 @@ Here are some good links to these:
 
 - Various -- <https://gnupg.org/software/frontends.html>
 
-[Back to Readme Index](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/README.md)
+[Back to Readme Index](../README.md)

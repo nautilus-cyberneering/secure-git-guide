@@ -25,4 +25,4 @@
 
 - <https://blog.ghostinthemachines.com/2015/03/01/how-to-use-gpg-command-line/>
 
-[Back to Readme Index](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/README.md)
+[Back to Readme Index](../README.md)
