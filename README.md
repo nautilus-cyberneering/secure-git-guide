@@ -1,4 +1,4 @@
-# GPG-Bootcamp :key: 🔒 :lock:
+# GPG-Bootcamp :key: 🔒 :lock
 
 ## Repository Description
 
@@ -13,7 +13,3 @@ Information relating to GPG and how we use it for projects and other purposes in
 - [GPG - Best Practices](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/docs/005_GPG-Best-Practices.md)
 - [GPG - Other Uses](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/docs/006_GPG-Other-Uses.md)
 - [GPG - Curated List of Resources](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/docs/007_GPG-Curated-List-of-Resources.md)
-
-
-
-

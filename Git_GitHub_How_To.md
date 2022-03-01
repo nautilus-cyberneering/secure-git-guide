@@ -69,8 +69,6 @@ If you are running Windows you will have to activate the OPENSSH service and the
 More on the "git clone":
 <https://www.git-scm.com/docs/git-clone>
 
-
-
 #### Listing Branches
 
 - Locally:

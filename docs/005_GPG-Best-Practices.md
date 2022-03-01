@@ -79,7 +79,7 @@ I base the following summary of steps in the command line interface on his work.
     gpg --list-keys --fingerprint --with-keygrip --with-subkey-fingerprints <public key 40 digits without spaces>
     ```
 
-10. You should now see the new sub-key and the changed primary key rights. 
+10. You should now see the new sub-key and the changed primary key rights.
 
 ### Removing primary key rights
 
@@ -133,22 +133,22 @@ In order to set up your new key for signing your commits you have to follow thes
 
 5. If you are using GitHub you will need to export your new public key and import it into it, following the necessary steps as shown in their [GitHub Documentation - Signing commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits).
 
-### Always use a Passphrase :exclamation:
+### Always use a Passphrase :exclamation
 
 ---
 When creating the set of keys you are asked for a passphrase. Set it and remember it or even better write it down somewhere. This is another safety measure but it is essential.
 
-### Backing up Your Revocation Certificate :exclamation:
+### Backing up Your Revocation Certificate :exclamation
 
 ---
 **_Make sure that you keep a backup of your revocation certificate or that you print it out and store it somewhere safe in case that you were to have to use it._**
 
-### Rotating Your Encryption Keys :exclamation:
+### Rotating Your Encryption Keys :exclamation
 
 ---
 This being one of the most used capabilities. It is recommended that you rotate these keys to prevent anyone to have access to any of your encrypted information, creating for example new keys in events such as computer change, etc. It is important though to back these up in the event that you were to have files encrypted with these.
 
-### Setting an Expiration Date :exclamation:
+### Setting an Expiration Date :exclamation
 
 ---
 Another good idea is to set an expiration date not too far in the future in case that you were to not be able to revoke your certificate due to having lost your revocation certificate.

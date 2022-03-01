@@ -26,7 +26,7 @@ Here is a series of screenshots of the process using the Kleopatra application f
 
 ![002](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/blob/main/media/KLEO_CREATE_002.png)
 
-**It is extremely important to use a passphrase and more important if you use it to actually write it down somwhere so that you never loose it.**
+**It is extremely important to use a passphrase and more important if you use it to actually write it down somewhere so that you never loose it.**
 
 (3)
 

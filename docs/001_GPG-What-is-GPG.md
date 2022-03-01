@@ -22,23 +22,23 @@ For a long time, it did not support the IDEA encryption algorithm used in PGP. I
 
 As of 2.2 versions, GnuPG supports the following algorithms:
 
-**Public key**
+### Public key
 
 RSA, ElGamal, DSA, ECDH, ECDSA, EdDSA
 
-**Cipher**
+### Cipher
 
 3DES, IDEA (since versions 1.4.13 and 2.0.20), CAST5, Blowfish, Twofish, AES-128, AES-192, AES-256, Camellia-128, -192 and -256 (since versions 1.4.10 and 2.0.12)
 
-**Hash**
+### Hash
 
 MD5, SHA-1, RIPEMD-160, SHA-256, SHA-384, SHA-512, SHA-224
 
-**Compression**
+### Compression
 
 Uncompressed, ZIP, ZLIB, BZIP2
 
-More recent releases of GnuPG 2.x ("modern" and the now deprecated "stable" series) expose most cryptographic functions and algorithms Libgcrypt (its cryptography library) provides, including support for elliptic curve cryptography (ECDH, ECDSA and EdDSA)[11] in the "modern" series (i.e. since GnuPG 2.1).
+More recent releases of GnuPG 2.x ("modern" and the now deprecated "stable" series) expose most cryptographic functions and algorithms Libgcrypt (its cryptography library) provides, including support for elliptic curve cryptography (ECDH, ECDSA and EdDSA) in the "modern" series (i.e. since GnuPG 2.1).
 
 ---
 
