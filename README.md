@@ -15,3 +15,5 @@ Information relating to GPG and how we use it for projects and other purposes in
 - [GPG - Best Practices](./docs/005_GPG-Best-Practices.md)
 - [GPG - Other Uses](./docs/006_GPG-Other-Uses.md)
 - [GPG - Curated List of Resources](./docs/007_GPG-Curated-List-of-Resources.md)
+- [GPG - How to create a subkey for signing](./docs/008_GPG-How-to-create-a-subkey-for-signing.md)
+- [GPG - How to use a signing key independently from the primary key](./docs/009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md)

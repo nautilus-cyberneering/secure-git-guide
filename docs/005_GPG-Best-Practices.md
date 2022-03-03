@@ -41,7 +41,7 @@ If you do not do this, you probably will end up someday with your primary key co
 
 In order to create additional sub-keys, you need to use the GPG command-line interface.
 
-A colleague of mine, Jose Celano wrote a very clear step-by-step guide for internal use in one of our company's repositories, [here](https://github.com/josecelano/pygithub/blob/main/docs/how_to_create_a_subkey_for_signing.md).
+You can read a very clear step-by-step guide [here](./008_GPG-How-to-create-a-subkey-for-signing.md).
 
 I base the following summary of steps in the command line interface on his work.
 
