@@ -1,6 +1,6 @@
 # GPG - How to use a signing key independently from the primary key
 
-Creating a subkey only for signing is considered a good practice, instead of using the primary key. If you wan to know why you can read this [article](./008_GPG-How-to-create-a-subkey-for-signing.md).
+Creating a subkey only for signing is considered a good practice, instead of using the primary key. If you want to know why you can read this [article](./008_GPG-How-to-create-a-subkey-for-signing.md).
 
 In that article we explain how to create that signing subkey and use it in your computer. We also explain how to upload the public key to GitHub if you want to verify your Git commits.
 
