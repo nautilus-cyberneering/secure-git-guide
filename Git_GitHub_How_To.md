@@ -180,7 +180,6 @@ What is GitHub - <https://www.youtube.com/watch?v=w3jLJU7DT5E>
 
 ### GitHub - Best Practices
 
-- Advanced overview of GitHub best practices - <https://resources.github.com/videos/github-best-practices/>
 - Top 10 GitHub best practices for developers - <https://medium.com/datreeio/top-10-github-best-practices-for-developers-d6309a613227>
 
 ## GIT - Visual User Interfaces
