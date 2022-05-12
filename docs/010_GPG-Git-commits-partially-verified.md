@@ -4,11 +4,13 @@ On [GitHub](https://github.com/), you can [enable vigilant mode for commit signa
 
 ![Commit with verified signature](../media/010/commit-with-verified-signature-on-github.png)
 
+It will verify not only the commits were you are the committer but also commits were you are the author.
+
 That is the straightforward case. However, there are some cases where you can get unexpected behaviour. We will describe some corner cases regarding signing git commits, but before that, we have to explain some basic Git concepts related to commit signatures.
 
 ## Committer vs author
 
-The "committer" is the person who executes the commit command `git commit`. Git gets the committer name, email and singing key from the configuration, and it is usually the global configuration.
+The "committer" is the person who executes the commit command `git commit`. Git gets the committer name and email from the Git configuration, and it is usually the global configuration.
 
 ```s
 $ git config -l | grep user
@@ -17,9 +19,94 @@ user.email=josecelano@gmail.com
 user.signingkey=58508C7950C7B7A2
 ```
 
-If you do not specify an author, Git assumes that the author is the same as the committer. You can also override the committer and the author using environment variables or command options (command option `--author` is only available for overriding the author).
+If you do not specify an author, Git assumes that the author is the same as the committer. You can also override the committer and the author using environment variables:
+
+```text
+GIT_AUTHOR_NAME
+GIT_AUTHOR_EMAIL
+GIT_COMMITTER_NAME
+GIT_COMMITTER_EMAIL
+```
+
+For the author you have a command option too (`git commit -m "..." --author="Your Name <your@email.com>"`).
 
 You can sign commits using the committer GPG key. Git does not support adding the author signature in addition to the committer signature.
+
+## Commit signature
+
+Git also allows you to sign a commit with a GPG key.
+
+From the [Git official documentation about GPG signature](https://git-scm.com/docs/signature-format):
+
+> _The command which is about to create an object (commit) determines a payload from that, calls gpg to obtain a detached signature for the payload (gpg -bsa) and embeds the signature into the object or transaction._
+
+You can use any GPG key. Usually the GPG user ID matches the committer info. If you have this configuration in your `~/.gitconfig` file:
+
+```s
+$ cat ~/.gitconfig
+[user]
+  name = A committer
+  email = committer@example.com
+  signingkey = BD98B3F42545FF93EFF55F7F3F39AA1432CA6AD7
+```
+
+You will probably have a GPG key like this:
+
+```s
+gpg -k --with-subkey-fingerprint 88966A5B8C01BD04F3DA440427304EDD6079B81C
+pub   rsa4096 2021-11-19 [C]
+      88966A5B8C01BD04F3DA440427304EDD6079B81C
+uid           [ultimate] A committer <committer@example.com>
+sub   rsa4096 2021-11-19 [E]
+      B1D4A2483D1D2A02416BE0775B6BDD35BEDFBF6F
+sub   rsa4096 2021-11-26 [S]
+      BD98B3F42545FF93EFF55F7F3F39AA1432CA6AD7
+```
+
+In Git you can commit using a different committer and author, and also with a GPG key with a different user ID.
+
+```s
+GIT_COMMITTER_NAME="Jose Celano [bot]" \
+GIT_COMMITTER_EMAIL="bot@josecelano.com" \
+GIT_AUTHOR_NAME="Jose Celano" \
+GIT_AUTHOR_EMAIL="josecelano@gmail.com" \
+  git commit --gpg-sign=BD98B3F42545FF93EFF55F7F3F39AA1432CA6AD7 -m "commit message"
+```
+
+This is how the commit looks`:
+
+```s
+commit d89b296e9d58cc4281aeead172b170739acc164c (HEAD -> main)
+gpg: Signature made jue 12 may 2022 15:36:29 WEST
+gpg:                using RSA key BD98B3F42545FF93EFF55F7F3F39AA1432CA6AD7
+gpg: Good signature from "A committer <committer@example.com>" [ultimate]
+Author:     Jose Celano <josecelano@gmail.com>
+AuthorDate: Thu May 12 15:36:29 2022 +0100
+Commit:     Jose Celano [bot] <bot@josecelano.com>
+CommitDate: Thu May 12 15:36:29 2022 +0100
+
+    commit message
+
+```
+
+That is how Git works, but GitHub does not work exactly like Git. On the [GitHub Documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key#generating-a-gpg-key) you can read:
+
+> Note: _When asked to enter your email address, ensure that you enter the verified email address for your GitHub account. To keep your email address private, use your GitHub-provided no-reply email address. For more information, see "Verifying your email address" and "Setting your commit email address."_
+
+GitHub forces you to a use a GPG key whose user ID matches one of your GitHub account emails, so that when GitHub verified the signature not only verifies that the signature is OK but it also verifies that committer's email and account email match.
+
+> _You should only enable vigilant mode if you sign all of your commits and tags and use an email address that is verified for your account on GitHub as your committer email address._
+
+GitHub shows you a simplified version of Git. Because it links the GPG key to the committer. Although is not a Git constraint it is a common practice. [GitLab](https://docs.gitlab.com/ee/user/project/repository/gpg_signed_commits/) seems to do exactly the same:
+
+> _For GitLab to consider a commit verified:_
+>
+> - _The committer must have a GPG public/private key pair._
+> - _The committer’s public key must be uploaded to their GitLab account._
+> - _One of the email addresses in the GPG public key must match a verified email address used by the committer in GitLab. To keep this address private, use the automatically generated private commit email address GitLab provides in your profile._
+> - _The committer’s email address must match the verified email address from the GPG key._
+
+For the rest of this article we assume that the GPG key fulfills the requirements in the GitLab documentation. We do not know if GitHub has exactly the same restrictions as we have not found documentation about it.
 
 ## Git commit with multiple GPG signatures
 
@@ -29,13 +116,13 @@ We have not found a reason why Git does not support multiple signatures. Since G
 
 The first solution is to sign the contents with one key and sign the result again with the following key until you sign it with all the keys.
 
-The second solution would be using "detached signatures", which means the signature is not included in the signed document. We suppose Git could have used this approach, and [this article from Owen Jacobson(](https://grimoire.ca/git/detached-sigs/) describes it in detail.
+The second solution would be using "detached signatures", which means the signature is not included in the signed document. We suppose Git could have used this approach, and [this article from Owen Jacobson(](https://grimoire.ca/git/detached-sigs/) describes it in detail. But it is not the case. Although Git uses "detached signatures", the signature is included as a commit header inside the "full" commit object that is used to calculate the commit hash. That means changing the signature changes the commit hash.
 
 ## Git merge, rebase and GPG signature
 
-So, we know that Git does not allow including the author's signature and the committer's signature. We have the restriction that you can only add one signature to each commit. That means you will permanently lose the author's signature when you commit someone else's code.
+So, we know that Git does not allow including the author's signature and the committer's signature. We have the restriction that you can only add one signature to each commit. That means you will permanently lose the author's signature when you commit someone else's code. You could include the author's signature instead of the committer's one but that is not an standard practice. If you want to include the author's signature your can keep the original commit, for example, by using git merge (with a merge commit) to merge branches.
 
-We will see whether that is important or not, why it is crucial, and how you can deal with this problem. However, before that, we need to understand what happens when a committer specifies a different author and other cases when the author changes automatically.
+We will see whether that is important or not, why it is crucial, and how you can deal with this problem. However, before that, we need to understand what happens when a committer specifies a different author and other cases where the author changes automatically.
 
 When you use the `git rebase` command with a different committer than the original commits, Git will keep the original author as the author of the newly generated commits.
 
