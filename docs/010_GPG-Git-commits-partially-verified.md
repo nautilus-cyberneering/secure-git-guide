@@ -4,11 +4,13 @@ On [GitHub](https://github.com/), you can [enable vigilant mode for commit signa
 
 ![Commit with verified signature](../media/010/commit-with-verified-signature-on-github.png)
 
-It will verify not only the commits were you are the committer but also commits were you are the author.
+It will verify not only the commits were you are the committer but also commits where you are the author.
 
 That is the straightforward case. However, there are some cases where you can get unexpected behaviour. We will describe some corner cases regarding signing git commits, but before that, we have to explain some basic Git concepts related to commit signatures.
 
-## Committer vs author
+## Basic Git concepts related to commit signatures
+
+### Committer vs author
 
 The "committer" is the person who executes the commit command `git commit`. Git gets the committer name and email from the Git configuration, and it is usually the global configuration.
 
@@ -30,9 +32,7 @@ GIT_COMMITTER_EMAIL
 
 For the author you have a command option too (`git commit -m "..." --author="Your Name <your@email.com>"`).
 
-You can sign commits using the committer GPG key. Git does not support adding the author signature in addition to the committer signature.
-
-## Commit signature
+### Commit signature in Git
 
 Git also allows you to sign a commit with a GPG key.
 
@@ -89,7 +89,9 @@ CommitDate: Thu May 12 15:36:29 2022 +0100
 
 ```
 
-That is how Git works, but GitHub does not work exactly like Git. On the [GitHub Documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key#generating-a-gpg-key) you can read:
+### Commit signature on GitHub
+
+That is how Git works, but [GitHub](https://github.com/) does not work exactly like Git. On the [GitHub Documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key#generating-a-gpg-key) you can read:
 
 > Note: _When asked to enter your email address, ensure that you enter the verified email address for your GitHub account. To keep your email address private, use your GitHub-provided no-reply email address. For more information, see "Verifying your email address" and "Setting your commit email address."_
 
@@ -404,7 +406,7 @@ That forces you to stop using GitHub UI for merging pull requests if you want al
 
 Regarding point 2, losing the author's signature, we first must consider why we do not want to lose it.
 
-We can consider the signature a mechanism to review/accepts changes. If we consider only the maintainers the ultimately responsible for our code, losing the author's signature is not critical, as long as maintainers make sure changes come from a trusted source. In this case, we are not breaking the trust. It is just that we trust maintainers, and they check signatures for other contributors they trust. The maintainers should ensure that commits on a pull request are signed by contributors they trust before merging them.
+We can consider the signature a mechanism to review/accept changes. If we consider only the maintainers the final responsible for our code, losing the author's signature is not critical, as long as the maintainers make sure changes come from a trusted source. In this case, we are not breaking the trust. It is just that we trust maintainers, and they check signatures for other contributors they trust. The maintainers should ensure that commits on a pull request are signed by contributors they trust before merging them.
 
 On the other hand, It would be nice to keep that trust chain transparent so people using a package can check that third-party contributors' changes were accepted without changes.
 
@@ -416,7 +418,7 @@ When this happens on GitHub, you see this message on the commit status (if you h
 
 ![Commit with partially verified signature](../media/010/commit-with-partially-verified-signature-on-github.png)
 
-Maybe losing the author's signature is not an issue from the package user or maintainers' point of view. However, from the author's point of view, you can not distinguish anymore between your legitimate commits and the fake ones. Someone else could pretend you have collaborated with their project. It is surprisingly easy to do that. You only need to create a commit and override the author with any users on GitHub.
+Maybe losing the author's signature is not an issue from the package user or the maintainers' point of view. However, from the author's point of view, you can not distinguish anymore between your legitimate commits and the fake ones. Someone else could pretend you have collaborated with their project. It is surprisingly easy to do that. You only need to create a commit and override the author with any users on GitHub.
 
 ## Conclusion
 
