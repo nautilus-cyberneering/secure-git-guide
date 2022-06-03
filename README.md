@@ -1,4 +1,6 @@
-# Secure Git Guide
+# 🚨 Secure Git Guide 🚨
+
+[![MegaLinter](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml)
 
 ## Repository Description
 
@@ -17,9 +19,9 @@ Topics that are covered among others:
 - GIT vs GitHub differences
 - etc.
 
-## GPG-Bootcamp :key: 🔒 :lock
+## GPG-Bootcamp 🔑🔒
 
-[![MegaLinter](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml)
+![GPG](media/GPG.jpg)
 
 ## Contents
 
