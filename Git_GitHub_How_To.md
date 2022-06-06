@@ -144,7 +144,7 @@ More on the "git clone":
 - What is Git? - <https://www.youtube.com/watch?v=2ReR1YJrNOM>
 - Git and GitHub for Beginners Crashcourse - <https://www.youtube.com/watch?v=RGOj5yH7evk>
 - Git Tutorial for Beginners: Command Line Basics - <https://www.youtube.com/watch?v=HVsySz-h9r4>
-- Git Tuorial for Beginners - SPANISH - <https://www.youtube.com/watch?v=kEPF-MWGq1w>
+- Git Tutorial for Beginners - SPANISH - <https://www.youtube.com/watch?v=kEPF-MWGq1w>
 - Git and GitHub - Practical Course from Scratch - SPANISH - <https://www.youtube.com/watch?v=HiXLkL42tMU>
 
 ### Git - Best Practices
