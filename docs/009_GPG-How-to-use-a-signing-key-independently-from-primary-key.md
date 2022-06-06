@@ -93,4 +93,4 @@ That means GPG did not change the passphrase for the primary key, because there 
 
 If you try to change the passphrase again with `passwd` you will see that the old password does not work anymore.
 
-[Back to Readme Index](../README.md)
+[Back to home](./index.md)

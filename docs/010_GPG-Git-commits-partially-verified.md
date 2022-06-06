@@ -2,7 +2,7 @@
 
 On [GitHub](https://github.com/), you can [enable vigilant mode for commit signature verification](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits). That means that GitHub will verify the signature of your commits and it will show a message like this:
 
-![Commit with verified signature](../media/010/commit-with-verified-signature-on-github.png)
+![Commit with verified signature](./media/010/commit-with-verified-signature-on-github.png)
 
 It will verify not only the commits were you are the committer but also commits where you are the author.
 
@@ -416,7 +416,7 @@ It is out of the scope of this article to describe the pros and cons of losing o
 
 When this happens on GitHub, you see this message on the commit status (if you have vigilant mode enabled):
 
-![Commit with partially verified signature](../media/010/commit-with-partially-verified-signature-on-github.png)
+![Commit with partially verified signature](./media/010/commit-with-partially-verified-signature-on-github.png)
 
 Maybe losing the author's signature is not an issue from the package user or the maintainers' point of view. However, from the author's point of view, you can not distinguish anymore between your legitimate commits and the fake ones. Someone else could pretend you have collaborated with their project. It is surprisingly easy to do that. You only need to create a commit and override the author with any users on GitHub.
 
@@ -447,4 +447,4 @@ When you use signed commits:
 
 - Git docs: [Git signature format](https://git-scm.com/docs/signature-format)
 
-[Back to Readme Index](../README.md)
+[Back to home](./index.md)

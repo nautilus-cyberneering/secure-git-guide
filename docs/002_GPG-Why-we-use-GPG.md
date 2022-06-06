@@ -36,4 +36,4 @@ If your primary key is compromised or you lose it, your security has been breach
 
 Nevertheless, for this situation there exists the **revocation certificate** which is created from the start at the same time that you create your keys for the first time or at any given time for the individual keys you want to revoke. With this certificate you would have to go to the before mentioned GPG key servers and upload it, to publicly revoke the affected key or keys.
 
-[Back to Readme Index](../README.md)
+[Back to home](./index.md)

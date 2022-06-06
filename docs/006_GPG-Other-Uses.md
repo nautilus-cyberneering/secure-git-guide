@@ -15,4 +15,4 @@ Here are some good links to these:
 
 - Various -- <https://gnupg.org/software/frontends.html>
 
-[Back to Readme Index](../README.md)
+[Back to home](./index.md)
