@@ -25,4 +25,4 @@
 
 - <https://blog.ghostinthemachines.com/2015/03/01/how-to-use-gpg-command-line/>
 
-[Back to Readme Index](../README.md)
+[Back to home](./index.md)

@@ -21,17 +21,15 @@ Topics that are covered among others:
 
 ## GPG-Bootcamp 🔑🔒
 
-![GPG](./docs/media/GPG.jpg)
+![GPG](media/GPG.jpg)
 
-## Contents
-
-- [GPG - What is GPG?](./docs/001_GPG-What-is-GPG.md)
-- [GPG - Why we use GPG](./docs/002_GPG-Why-we-use-GPG.md)
-- [GPG - 101 - How to get your first GPG Keys](./docs/003-GPG-101-How-to-get-your-first-GPG-Keys.md)
-- [GPG - How to use GPG with GIT and GitHub](./docs/004_GPG-How-to-use-GPG-with-GIT-and-GitHub.md)
-- [GPG - Best Practices](./docs/005_GPG-Best-Practices.md)
-- [GPG - Other Uses](./docs/006_GPG-Other-Uses.md)
-- [GPG - Curated List of Resources](./docs/007_GPG-Curated-List-of-Resources.md)
-- [GPG - How to create a subkey for signing](./docs/008_GPG-How-to-create-a-subkey-for-signing.md)
-- [GPG - How to use a signing key independently from the primary key](./docs/009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md)
-- [GPG - Git commits partially verified](./docs/010_GPG-Git-commits-partially-verified.md)
+- [What is GPG?](./001_GPG-What-is-GPG.md) (`gpg`)
+- [Why we use GPG](./002_GPG-Why-we-use-GPG.md) (`gpg`)
+- [GPG 101 - How to get your first GPG Keys](./003-GPG-101-How-to-get-your-first-GPG-Keys.md) (`gpg`)
+- [How to use GPG with GIT and GitHub](./004_GPG-How-to-use-GPG-with-GIT-and-GitHub.md) (`gpg`)
+- [Best Practices](./005_GPG-Best-Practices.md) (`gpg`)
+- [Other Uses](./006_GPG-Other-Uses.md) (`gpg`)
+- [Curated List of Resources](./007_GPG-Curated-List-of-Resources.md) (`gpg`)
+- [How to create a subkey for signing](./ (`gpg`)008_GPG-How-to-create-a-subkey-for-signing.md)
+- [How to use a signing key independently from the primary key](./009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md) (`gpg`)
+- [Git commits partially verified](./010_GPG-Git-commits-partially-verified.md) (`gpg`, `github`)

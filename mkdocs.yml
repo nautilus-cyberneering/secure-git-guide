@@ -1,0 +1,9 @@
+site_name: Secure Git Guide
+site_url: https://github.com/Nautilus-Cyberneering/secure-git-guide
+repo_url: https://github.com/Nautilus-Cyberneering/secure-git-guide
+site_description: "A collections of articles about Git, GitHub and GPG focused on security"
+nav:
+  - Home: index.md
+theme:
+  name: null
+  custom_dir: "cinder"

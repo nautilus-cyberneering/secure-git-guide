@@ -52,7 +52,7 @@ Here are some good videos that explain the what and how of Git:
 
 In order to get the git repository ssh url you have to go to the repository, and select the green "Code" button, and here choose the "ssh" tab to then copy the url as shown in the following image:
 
-![Cloning](./media_git/command-clone-01.png)
+![Cloning](./docs/media_git/command-clone-01.png)
 
 You have to click on "Code" and then select "SSH" and copy the address which whould look something similar to this:
 
@@ -144,7 +144,7 @@ More on the "git clone":
 - What is Git? - <https://www.youtube.com/watch?v=2ReR1YJrNOM>
 - Git and GitHub for Beginners Crashcourse - <https://www.youtube.com/watch?v=RGOj5yH7evk>
 - Git Tutorial for Beginners: Command Line Basics - <https://www.youtube.com/watch?v=HVsySz-h9r4>
-- Git Tuorial for Beginners - SPANISH - <https://www.youtube.com/watch?v=kEPF-MWGq1w>
+- Git Tutorial for Beginners - SPANISH - <https://www.youtube.com/watch?v=kEPF-MWGq1w>
 - Git and GitHub - Practical Course from Scratch - SPANISH - <https://www.youtube.com/watch?v=HiXLkL42tMU>
 
 ### Git - Best Practices

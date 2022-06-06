@@ -204,4 +204,4 @@ sub   rsa4096 2021-11-26 [S]
 - [Creating a new GPG key with subkeys](https://www.void.gr/kargig/blog/2013/12/02/creating-a-new-gpg-key-with-subkeys/)
 - [Generating More Secure GPG Keys: Rationale](https://spin.atomicobject.com/2013/10/23/secure-gpg-keys/)
 
-[Back to Readme Index](../README.md)
+[Back to home](./index.md)
