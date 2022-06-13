@@ -37,3 +37,7 @@ Topics that are covered among others:
 ## Git-Bootcamp
 
 - [How to remove commits by their commit message](./011_How-to-remove-commits-by-commit-message.md) (`git`)
+
+## GitHub-Bootcamp
+
+- [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
