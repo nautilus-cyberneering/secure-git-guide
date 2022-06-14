@@ -33,3 +33,7 @@ Topics that are covered among others:
 - [How to create a subkey for signing](./ (`gpg`)008_GPG-How-to-create-a-subkey-for-signing.md)
 - [How to use a signing key independently from the primary key](./009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md) (`gpg`)
 - [Git commits partially verified](./010_GPG-Git-commits-partially-verified.md) (`gpg`, `github`)
+
+## Git-Bootcamp
+
+- [How to remove commits by their commit message](./011_How-to-remove-commits-by-commit-message.md) (`git`)
