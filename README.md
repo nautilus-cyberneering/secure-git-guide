@@ -21,4 +21,4 @@ Topics that are covered among others:
 
 You can find all the articles here:
 
-<https://github.com/Nautilus-Cyberneering/secure-git-guide>
+<https://nautilus-cyberneering.github.io/secure-git-guide/>
