@@ -1,6 +1,10 @@
 # 🚨 Secure Git Guide 🚨
 
+![Index header](./docs/media/HEADER/SGG-IndexHeader-1600x500.jpg)
+
 [![MegaLinter](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml)
+![Open Source](https://badgen.net/badge/Open%20Source/100%25/DA2CE7)
+![Cool](https://badgen.net/badge/Cool/100%25/FF7F50)
 
 ## Repository Description
 

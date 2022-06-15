@@ -1,14 +1,16 @@
 # 🚨 Secure Git Guide 🚨
 
-[![MegaLinter](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml)
+![Index header](./media/HEADER/SGG-IndexHeader-1600x500.jpg)
 
-## Repository Description
+[![MegaLinter](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml)
+![Open Source](https://badgen.net/badge/Open%20Source/100%25/DA2CE7)
+![Cool](https://badgen.net/badge/Cool/100%25/FF7F50)
 
 Here you will find information on how to use GIT securely in development work.
-This repository is the result of our team actively developing a pure GIT / GitHub infrastructure for repository optimization and automation during which we encountered security challenges.
+This guide is the result of our team actively developing a pure GIT / GitHub infrastructure for repository optimization and automation during which we encountered security challenges.
 Here we attempt to help any developer to use GIT and GitHub more securely.
 
-This is a WIP repository where we will be adding new things as we keep developing.
+This is a website based on a WIP repository where we will be adding new things as we keep developing.
 Challenges that we are facing in terms of security will be registered here.
 
 Topics that are covered among others:
@@ -19,9 +21,7 @@ Topics that are covered among others:
 - GIT vs GitHub differences.
 - etc.
 
-## GPG-Bootcamp 🔑🔒
-
-![GPG](media/GPG.jpg)
+## Articles 🔑🔒
 
 - [What is GPG?](./001_GPG-What-is-GPG.md) (`gpg`)
 - [Why we use GPG](./002_GPG-Why-we-use-GPG.md) (`gpg`, `github`)
@@ -33,13 +33,19 @@ Topics that are covered among others:
 - [How to create a subkey for signing](./008_GPG-How-to-create-a-subkey-for-signing.md) (`gpg`)
 - [How to use a signing key independently from the primary key](./009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md) (`gpg`)
 - [Git commits partially verified](./010_GPG-Git-commits-partially-verified.md) (`gpg`, `github`)
-
-## Git-Bootcamp
-
 - [How to remove commits by their commit message](./011_How-to-remove-commits-by-commit-message.md) (`github`)
+- [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
 
-## GitHub-Bootcamp
+## Suggestions and Contact
 
+<<<<<<< Updated upstream
 - [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
 - [How GitHub Actions can get access to secrets](./013_How-github-actions-can-get-access-to-secrets.md) (`github`)
 
+=======
+If you would like to contact us or make any suggestions or comments please do so via:
+
+A new issue in our GitHub repository: <https://github.com/Nautilus-Cyberneering/secure-git-guide/issues>
+or
+Email: [info@nautilus-cyberneering.de](mailto:info@nautiluscyberneering.de)
+>>>>>>> Stashed changes
