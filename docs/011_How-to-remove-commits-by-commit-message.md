@@ -1,6 +1,6 @@
 # Git - How to remove commits by their commit message
 
-![Article Header Image](./media/011/SGG-HowToRemoveCommitsByTheirCommitsMessage-1600x627.jpg)
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-011.jpg)
 
 Recently we had to remove a large number of commits from our repository. We have implemented a job queue as a GitHub Action. The queue is implemented using empty Git commits to store the jobs information. So you do not need external services. We call it [Git-Queue](https://github.com/Nautilus-Cyberneering/git-queue).
 

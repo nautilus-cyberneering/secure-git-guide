@@ -1,5 +1,7 @@
 # GPG - 101 - How to get your first GPG Keys
 
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-003.jpg)
+
 ## Installing GPG
 
 The steps to install GPG on your computer are the following:
