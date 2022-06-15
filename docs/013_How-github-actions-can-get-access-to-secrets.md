@@ -45,10 +45,10 @@ We have create a demo repository for this article with some examples to understa
 
 ## Example using an embedded docker action
 
-We have created an [embedded docker action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/tree/issue-3-readme/.github/actions/env). Then we have added a [workflow tu run the action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/blob/issue-3-readme/.github/workflows/test-env-action.yml). And finally, the action [prints all the environment variables](https://github.com/Nautilus-Cyberneering/github-actions-secrets/actions/workflows/test-env-action.yml) that it receives.
+We have created an [embedded docker action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/tree/main/.github/actions/env). Then we have added a [workflow tu run the action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/blob/main/.github/workflows/test-env-action.yml). And finally, the action [prints all the environment variables](https://github.com/Nautilus-Cyberneering/github-actions-secrets/actions/workflows/test-env-action.yml) that it receives.
 
-- [The embedded docker action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/tree/issue-3-readme/.github/actions/env).
-- [The workflow using the action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/blob/issue-3-readme/.github/workflows/test-env-action.yml).
+- [The embedded docker action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/tree/main/.github/actions/env).
+- [The workflow using the action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/blob/main/.github/workflows/test-env-action.yml).
 - [The output of the action](https://github.com/Nautilus-Cyberneering/github-actions-secrets/actions/workflows/test-env-action.yml).
 
 This is the output:
