@@ -1,5 +1,7 @@
 # GPG - Curated List of Resources
 
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-007.jpg)
+
 ## Downloads & Installation
 
 - <https://gnupg.org/>

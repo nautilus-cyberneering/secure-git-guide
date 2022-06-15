@@ -1,5 +1,7 @@
 # GPG - Git commits partially verified
 
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-010.jpg)
+
 On [GitHub](https://github.com/), you can [enable vigilant mode for commit signature verification](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits). That means that GitHub will verify the signature of your commits and it will show a message like this:
 
 ![Commit with verified signature](./media/010/commit-with-verified-signature-on-github.png)

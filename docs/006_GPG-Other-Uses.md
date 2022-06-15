@@ -1,5 +1,7 @@
 # GPG - Other Uses
 
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-006.jpg)
+
 As for other uses.
 The most usual are encryption and email.
 

@@ -1,5 +1,7 @@
 # How to create a subkey for signing
 
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-008.jpg)
+
 By default, when you create a new GPG key, what you create is a pair of keys:
 
 - The Primary Key

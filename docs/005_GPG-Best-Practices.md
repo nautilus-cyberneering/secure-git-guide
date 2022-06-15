@@ -1,5 +1,7 @@
 # GPG - Best Practices
 
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-005.jpg)
+
 ## Understanding GPG Defaults
 
 ![IMAGE](https://nautilus-cyberneering.de/wp-content/uploads/2022/01/gpg_gITHUB.jpg)

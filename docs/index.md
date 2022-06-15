@@ -24,19 +24,19 @@ Topics that are covered among others:
 ![GPG](media/GPG.jpg)
 
 - [What is GPG?](./001_GPG-What-is-GPG.md) (`gpg`)
-- [Why we use GPG](./002_GPG-Why-we-use-GPG.md) (`gpg`)
+- [Why we use GPG](./002_GPG-Why-we-use-GPG.md) (`gpg`, `github`)
 - [GPG 101 - How to get your first GPG Keys](./003-GPG-101-How-to-get-your-first-GPG-Keys.md) (`gpg`)
-- [How to use GPG with GIT and GitHub](./004_GPG-How-to-use-GPG-with-GIT-and-GitHub.md) (`gpg`)
+- [How to use GPG with GIT and GitHub](./004_GPG-How-to-use-GPG-with-GIT-and-GitHub.md) (`gpg`,`github`)
 - [Best Practices](./005_GPG-Best-Practices.md) (`gpg`)
 - [Other Uses](./006_GPG-Other-Uses.md) (`gpg`)
-- [Curated List of Resources](./007_GPG-Curated-List-of-Resources.md) (`gpg`)
+- [Curated List of Resources](./007_GPG-Curated-List-of-Resources.md) (`gpg`, `github`)
 - [How to create a subkey for signing](./008_GPG-How-to-create-a-subkey-for-signing.md) (`gpg`)
 - [How to use a signing key independently from the primary key](./009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md) (`gpg`)
 - [Git commits partially verified](./010_GPG-Git-commits-partially-verified.md) (`gpg`, `github`)
 
 ## Git-Bootcamp
 
-- [How to remove commits by their commit message](./011_How-to-remove-commits-by-commit-message.md) (`git`)
+- [How to remove commits by their commit message](./011_How-to-remove-commits-by-commit-message.md) (`github`)
 
 ## GitHub-Bootcamp
 

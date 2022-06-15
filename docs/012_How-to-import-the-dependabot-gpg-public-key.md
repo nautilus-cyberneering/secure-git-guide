@@ -1,5 +1,7 @@
 # How to import the dependabot GPG public-key
 
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-012.jpg)
+
 THe GitHub [dependabot](https://github.com/dependabot) is a _GitHub dependency management tool that allows you to manage your dependencies in a way that is easy to use and easy to understand_.
 
 The dependabot checks your dependencies regularly and if it finds any new dependencies it will automatically add them to your repository. This is a great way to keep your dependencies up to date and secure. The dependabot is a _GitHub app_ that runs on your GitHub repository. It creates a new pull request to update your dependencies.

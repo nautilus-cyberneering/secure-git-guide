@@ -1,5 +1,7 @@
 # GPG - Why we use GPG
 
+![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-002.jpg)
+
 The main reason to use GPG in our daily work is to make sure that our contributions to the company's repositories belong to one of its active contributors or maintainers.
 
 We use it to prevent impersonation attacks.
