@@ -35,15 +35,15 @@ Topics that are covered among others:
 - [Git commits partially verified](./010_GPG-Git-commits-partially-verified.md) (`gpg`, `github`)
 - [How to remove commits by their commit message](./011_How-to-remove-commits-by-commit-message.md) (`github`)
 - [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
+- [How GitHub Actions can get access to secrets](./013_How-github-actions-can-get-access-to-secrets.md) (`github`)
+- [Sharing GitHub secrets with third-party actions](./014_Sharing-GitHub-secrets-with-third-party-actions.md) (`github`, `gh-actions`)
 
 ## Suggestions and Contact
 
-- [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
-- [How GitHub Actions can get access to secrets](./013_How-github-actions-can-get-access-to-secrets.md) (`github`)
-
-=======
 If you would like to contact us or make any suggestions or comments please do so via:
 
 A new issue in our GitHub repository: <https://github.com/Nautilus-Cyberneering/secure-git-guide/issues>
+
 or
+
 Email: [info@nautilus-cyberneering.de](mailto:info@nautiluscyberneering.de)
