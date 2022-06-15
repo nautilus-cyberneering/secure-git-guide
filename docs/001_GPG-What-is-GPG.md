@@ -1,4 +1,5 @@
 # GPG - What is GPG
+
 ![HEADER IMAGE](./media/HEADER/GitHub-Repo-SecureGitGuide-ART-001.jpg)
 
 Note: Source [WIKIPEDIA](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
