@@ -38,7 +38,6 @@ Topics that are covered among others:
 
 ## Suggestions and Contact
 
-<<<<<<< Updated upstream
 - [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
 - [How GitHub Actions can get access to secrets](./013_How-github-actions-can-get-access-to-secrets.md) (`github`)
 
@@ -48,4 +47,3 @@ If you would like to contact us or make any suggestions or comments please do so
 A new issue in our GitHub repository: <https://github.com/Nautilus-Cyberneering/secure-git-guide/issues>
 or
 Email: [info@nautilus-cyberneering.de](mailto:info@nautiluscyberneering.de)
->>>>>>> Stashed changes
