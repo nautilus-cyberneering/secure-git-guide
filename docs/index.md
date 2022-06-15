@@ -30,7 +30,7 @@ Topics that are covered among others:
 - [Best Practices](./005_GPG-Best-Practices.md) (`gpg`)
 - [Other Uses](./006_GPG-Other-Uses.md) (`gpg`)
 - [Curated List of Resources](./007_GPG-Curated-List-of-Resources.md) (`gpg`)
-- [How to create a subkey for signing](./ (`gpg`)008_GPG-How-to-create-a-subkey-for-signing.md)
+- [How to create a subkey for signing](./008_GPG-How-to-create-a-subkey-for-signing.md) (`gpg`)
 - [How to use a signing key independently from the primary key](./009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md) (`gpg`)
 - [Git commits partially verified](./010_GPG-Git-commits-partially-verified.md) (`gpg`, `github`)
 
