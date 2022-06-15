@@ -41,3 +41,5 @@ Topics that are covered among others:
 ## GitHub-Bootcamp
 
 - [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
+- [How GitHub Actions can get access to secrets](./013_How-github-actions-can-get-access-to-secrets.md) (`github`)
+
