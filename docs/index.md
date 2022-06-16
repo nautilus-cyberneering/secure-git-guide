@@ -55,6 +55,7 @@ We will be eternally thankful and add you to our credits at the bottom of our in
 - [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
 - [How GitHub Actions can get access to secrets](./013_How-github-actions-can-get-access-to-secrets.md) (`github`)
 - [Sharing GitHub secrets with third-party actions](./014_Sharing-GitHub-secrets-with-third-party-actions.md) (`github`, `gh-actions`)
+- [How to use Git as a database](./015_How-to-use-Git-as-a-database.md) (`git`)
 
 ## Resources
 
