@@ -58,6 +58,7 @@ We will be eternaly thankful and add you to our credits at the bottom of our ind
 - [Sharing GitHub secrets with third-party actions](./014_Sharing-GitHub-secrets-with-third-party-actions.md) (`github`, `gh-actions`)
 
 ## Resources
+
 - [Curated List of Resources](./007_Curated-List-of-Resources.md) (`gpg`, `github`)
 
 ## Suggestions and Contact
