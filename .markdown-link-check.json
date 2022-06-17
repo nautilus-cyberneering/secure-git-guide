@@ -4,7 +4,8 @@
       "urls": [
         "https://github.com/",
         "https://docs.github.com/",
-        "https://help.github.com/"
+        "https://help.github.com/",
+        "https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions/new"
       ],
       "headers": {
         "Accept-Encoding": "zstd, br, gzip, deflate"

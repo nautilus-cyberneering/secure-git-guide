@@ -38,7 +38,7 @@ The way we work is simple:
 
 Here is the link to setting up a new discussion, we look forward to it: <https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions/new>.
 
-We will be eternaly thankful and add you to our credits at the bottom of our index.
+We will be eternally thankful and add you to our credits at the bottom of our index.
 
 ## Articles 🔑🔒
 
@@ -48,7 +48,6 @@ We will be eternaly thankful and add you to our credits at the bottom of our ind
 - [How to use GPG with GIT and GitHub](./004_GPG-How-to-use-GPG-with-GIT-and-GitHub.md) (`gpg`,`github`)
 - [Best Practices](./005_GPG-Best-Practices.md) (`gpg`)
 - [Other Uses](./006_GPG-Other-Uses.md) (`gpg`)
-
 - [How to create a subkey for signing](./008_GPG-How-to-create-a-subkey-for-signing.md) (`gpg`)
 - [How to use a signing key independently from the primary key](./009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md) (`gpg`)
 - [Git commits partially verified](./010_GPG-Git-commits-partially-verified.md) (`gpg`, `github`)
