@@ -43,7 +43,7 @@ echo 'test content' | git hash-object -w --stdin
 d670460b4b4aece5915caf5c68d12f560a9fe3e4
 ```
 
-The the last command output is the sha1 of the new object. You can get the object content back using that sha1:
+The last command output is the sha1 of the new object. You can get the object content back using that sha1:
 
 ```s
 git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4
@@ -380,7 +380,7 @@ I recommend reading [these articles](https://www.dddcommunity.org/library/vernon
 
 ### Atomic Git push
 
-Sometimes you will need to update the object but also to create other commits in others branches atomically. For example, if you want to update two object at the same time. You could want to update both of them or neither of them. That is to say, you could want to have transactions.
+Sometimes you will need to update the object but also to create other commits in others branches atomically. For example, if you want to update two objects at the same time. You could want to update both of them or neither of them. That is to say, you could want to have transactions.
 
 Fortunately, Git has a `push` option “--atomic” that does exactly that: "Either all refs are updated, or on error, no refs are updated”.
 
