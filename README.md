@@ -26,3 +26,22 @@ Topics that are covered among others:
 You can find all the articles here:
 
 <https://nautilus-cyberneering.github.io/secure-git-guide/>
+
+## Suggestions, petitions on articles, contributions, etc 🤓🤡👍
+
+If you would like to contribute with your experience, have a question or would like to make a correction or suggestion. You are more than welcome.
+
+We encourage you to tell us. This is a team effort meant to benefit everyone.
+
+If you would like to do so, please go and open a discussion on the topic, challenge you are facing, improvement we could make etc. **We are all ears**.
+
+The way we work is simple:
+
+- A new discussion is opened
+- We discuss it publicly with you
+- If it makes a new addition to the guide we create an issue.
+- You can create the new document or extend or amend an existing one
+
+Here is the link to setting up a new discussion, we look forward to it: <https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions>.
+
+We will be eternally thankful and add you to our credits at the bottom of our index.
