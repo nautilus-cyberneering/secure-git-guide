@@ -6,12 +6,12 @@
 ![Open Source](https://badgen.net/badge/Open%20Source/100%25/DA2CE7)
 ![Cool](https://badgen.net/badge/Cool/100%25/FF7F50)
 
-Here you will find information on how to use GIT securely in development work.
-This guide is the result of our team actively developing a pure GIT / GitHub infrastructure for repository optimization and automation during which we encountered security challenges.
 Here we attempt to help any developer to use GIT and GitHub more securely.
+Any challenges that we are facing in terms of security will be registered here.
+You will find information on how to use GIT securely in development work.
+This guide is the result of our team actively developing a pure GIT / GitHub infrastructure for repository optimization and automation during which we encountered security challenges.
 
-This is a website based on a WIP repository where we will be adding new things as we keep developing.
-Challenges that we are facing in terms of security will be registered here.
+This is a website based on a WIP repository where we will be adding new things as we keep developing. The contents takes two forms: articles and lists of resources.
 
 Topics that are covered among others:
 
@@ -29,7 +29,7 @@ Topics that are covered among others:
 - [How to use GPG with GIT and GitHub](./004_GPG-How-to-use-GPG-with-GIT-and-GitHub.md) (`gpg`,`github`)
 - [Best Practices](./005_GPG-Best-Practices.md) (`gpg`)
 - [Other Uses](./006_GPG-Other-Uses.md) (`gpg`)
-- [Curated List of Resources](./007_GPG-Curated-List-of-Resources.md) (`gpg`, `github`)
+
 - [How to create a subkey for signing](./008_GPG-How-to-create-a-subkey-for-signing.md) (`gpg`)
 - [How to use a signing key independently from the primary key](./009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md) (`gpg`)
 - [Git commits partially verified](./010_GPG-Git-commits-partially-verified.md) (`gpg`, `github`)
@@ -37,6 +37,10 @@ Topics that are covered among others:
 - [How to import the dependabot GPG public key](./012_How-to-import-the-dependabot-gpg-public-key.md) (`gpg`, `github`)
 - [How GitHub Actions can get access to secrets](./013_How-github-actions-can-get-access-to-secrets.md) (`github`)
 - [Sharing GitHub secrets with third-party actions](./014_Sharing-GitHub-secrets-with-third-party-actions.md) (`github`, `gh-actions`)
+
+## Resources
+- [Curated List of Resources](./007_Curated-List-of-Resources.md) (`gpg`, `github`)
+
 
 ## Suggestions and Contact
 
