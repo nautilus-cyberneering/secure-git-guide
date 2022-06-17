@@ -36,7 +36,7 @@ The way we work is simple:
 - If it makes a new addition to the guide we create an issue.
 - You can create the new document or extend or amend an existing one
 
-Here is the link to setting up a new discussion, we look forward to it: <https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions/new>.
+Here is the link to setting up a new discussion, we look forward to it: <https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions>.
 
 We will be eternally thankful and add you to our credits at the bottom of our index.
 
