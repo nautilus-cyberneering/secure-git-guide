@@ -52,6 +52,7 @@ Index:
 ### Best Practices (Git)
 
 - [7 Git Best Practices to Start using in your next Commit](https://sourcelevel.io/blog/7-git-best-practices-to-start-using-in-your-next-commit)
+- [Security best practices for git users](https://resources.infosecinstitute.com/topic/security-best-practices-for-git-users/)
 
 ### Definition (Git)
 
