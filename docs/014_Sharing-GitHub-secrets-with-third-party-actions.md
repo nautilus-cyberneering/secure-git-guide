@@ -19,7 +19,7 @@ That is why we have been wondering if the MegaLinter itself could be a security 
 
 ## Default installation for MegaLinter
 
-Supposing you created a new organization on GitHub, and a new repository and you wanted to use MegaLinter. After [installing](https://megalinter.github.io/latest/installation/) it, it would have added a workflow with this step:
+Supposing you created a new organization on GitHub, and a new repository and you wanted to use MegaLinter. After [installing](https://oxsecurity.github.io/megalinter/latest/installation/) it, it would have added a workflow with this step:
 
 ```yml
 - name: MegaLinter
