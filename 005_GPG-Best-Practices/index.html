@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/005_GPG-Best-Practices/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>GPG - Best Practices - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/005_GPG-Best-Practices.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#gpg-best-practices">GPG - Best Practices</a></li>
+            <li class="second-level"><a href="#understanding-gpg-defaults">Understanding GPG Defaults</a></li>
+                
+                <li class="third-level"><a href="#why-is-this-not-optimal">Why is this not optimal?</a></li>
+            <li class="second-level"><a href="#recommended-best-practices">Recommended Best Practices</a></li>
+                
+                <li class="third-level"><a href="#how-to-create-further-sub-keys">How to create further sub-keys</a></li>
+                <li class="third-level"><a href="#removing-primary-key-rights">Removing primary key rights</a></li>
+                <li class="third-level"><a href="#configuring-git-with-your-new-key">Configuring Git with your new key</a></li>
+                <li class="third-level"><a href="#always-use-a-passphrase-exclamation">Always use a Passphrase :exclamation</a></li>
+                <li class="third-level"><a href="#backing-up-your-revocation-certificate-exclamation">Backing up Your Revocation Certificate :exclamation</a></li>
+                <li class="third-level"><a href="#rotating-your-encryption-keys-exclamation">Rotating Your Encryption Keys :exclamation</a></li>
+                <li class="third-level"><a href="#setting-an-expiration-date-exclamation">Setting an Expiration Date :exclamation</a></li>
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="gpg-best-practices">GPG - Best Practices</h1>
+<p><img alt="HEADER IMAGE" src="../media/HEADER/GitHub-Repo-SecureGitGuide-ART-005.jpg" /></p>
+<h2 id="understanding-gpg-defaults">Understanding GPG Defaults</h2>
+<p><img alt="IMAGE" src="https://nautilus-cyberneering.de/wp-content/uploads/2022/01/gpg_gITHUB.jpg" /></p>
+<p>There are many arrangement and possible combinations of keys, sub-keys, user-id's and so on. When you use GPG to generate your keys, by default it generates your keys following a standard template:</p>
+<ul>
+<li>Keys</li>
+<li>Primary Key (Certify and Signing)</li>
+<li>Supplementary Key (Encrypting)</li>
+<li>User-ID</li>
+<li>Primary ID (Name, Email, and Comment)</li>
+</ul>
+<p>You can notice that the primary key has been set with the dual-capabilities of Certifying (to make new supplementary keys) and Signing (such as signing a Git commit).</p>
+<p>This basis structure was chosen upon the thought that the keys used for Encryption need to be (or at least should be) rotated regularly, however Signing can remain constant over the lifetime of the OpenPGP Key.</p>
+<p>However, in many cases this is not what the user would want if given the choice.</p>
+<h3 id="why-is-this-not-optimal">Why is this not optimal?</h3>
+<p>The default set-up leaves still some space for improvement. This is because it does not take advantage of the possibility to create individual sub-keys for each capability.</p>
+<p>The idea is that you essentially disconnect all the rights of your choice from your primary key and just use your sub-keys to avoid using your primary key. The only times you then use your primary is to cancel (revoke) existing sub-keys or to generate new sub-keys.</p>
+<p>It is very advanced to separate the primary key from the supplementary keys.</p>
+<p>The advantage of this approach is that if any of these sub-keys gets compromised, you can revoke individually and generate a new key, all while keeping your primary key valid.</p>
+<p>If you do not do this, you probably will end up someday with your primary key compromised and will have to regenerate a new primary key, etc.</p>
+<h2 id="recommended-best-practices">Recommended Best Practices</h2>
+<p>======================================================================</p>
+<h3 id="how-to-create-further-sub-keys">How to create further sub-keys</h3>
+<hr />
+<p><img alt="IMAGE" src="https://nautilus-cyberneering.de/wp-content/uploads/2022/01/MOTHERkEY-1024x384.jpg" /></p>
+<p>In order to create additional sub-keys, you need to use the GPG command-line interface.</p>
+<p>You can read a very clear step-by-step guide <a href="../008_GPG-How-to-create-a-subkey-for-signing/">here</a>.</p>
+<p>I base the following summary of steps in the command line interface on his work.</p>
+<ol>
+<li>
+<p>Type:</p>
+<p><code>terminal
+gpg --list-keys --fingerprint --with-keygrip --with-subkey-fingerprints</code></p>
+</li>
+<li>
+<p>In the list you get an overview of all the primary key and its existing sub-keys. You will copy the second line of your public key made up of 10 pairs of 4 numbers and or letters.</p>
+</li>
+<li>
+<p>Using the noted public key type:</p>
+<p><code>terminal
+gpg --edit-key &lt;public key 40 digits without spaces&gt;</code></p>
+</li>
+<li>
+<p>You will get a display of their associated private key and a new prompt so type:</p>
+<p><code>terminal
+addkey</code></p>
+</li>
+<li>
+<p>Select your applicable key, most likely option <strong>(4) RSA (sign only)</strong></p>
+</li>
+<li>
+<p>It will ask you to specify the keysize duration, I recommend <strong>4096</strong> and <strong>"0"</strong> for does not expire.</p>
+</li>
+<li>
+<p>Confirm the creation.</p>
+</li>
+<li>
+<p>You get a new overview of the new secret keys, seeing the newly generated sub-key and the changed rights of the primary key.</p>
+</li>
+<li>
+<p>To see the equivalent public keys for export type:</p>
+<p><code>terminal
+gpg --list-keys --fingerprint --with-keygrip --with-subkey-fingerprints &lt;public key 40 digits without spaces&gt;</code></p>
+</li>
+<li>
+<p>You should now see the new sub-key and the changed primary key rights.</p>
+</li>
+</ol>
+<h3 id="removing-primary-key-rights">Removing primary key rights</h3>
+<hr />
+<p>The last step to finish this is to remove all capabilities except the "certify" capability from the primary key. For this, you will continue using the command line but using the "expert" mode.</p>
+<ol>
+<li>
+<p>Type:</p>
+<p><code>terminal
+gpg --expert --edit-key &lt;public key 40 digits without spaces&gt;</code></p>
+</li>
+<li>
+<p>You will get an overview of the primary key's rights.</p>
+</li>
+<li>
+<p>Type:</p>
+<p><code>terminal
+change-usage</code></p>
+</li>
+<li>
+<p>Use the toggle option taking away the rights for which you already have created the new sub-key.</p>
+</li>
+<li>
+<p>Once you are done you get a new overview of the primary key's rights.</p>
+</li>
+<li>
+<p>Type save and you are all set working on the keys.</p>
+</li>
+<li>
+<p>Type:</p>
+<p><code>terminal
+gpg --list-keys --fingerprint --with-keygrip --with-subkey-fingerprints &lt;public key 40 digits without spaces&gt;</code></p>
+</li>
+<li>
+<p>You will see the new public key rights where you should only see the "c" option for certify at the "pub" key.</p>
+</li>
+</ol>
+<h3 id="configuring-git-with-your-new-key">Configuring Git with your new key</h3>
+<hr />
+<p>In order to set up your new key for signing your commits you have to follow these steps:</p>
+<ol>
+<li>
+<p>In the command prompt type:</p>
+<p><code>terminal
+git config --global --edit&lt;/code&gt;</code></p>
+</li>
+<li>
+<p>This will open the git config file in your default editor. In my case it opens it in Visual Code.</p>
+</li>
+<li>
+<p>Once here look for the following entry of the signing-key and update it with the last 16 digits of your new signing sub-key.</p>
+</li>
+<li>
+<p>Save it.</p>
+</li>
+<li>
+<p>If you are using GitHub you will need to export your new public key and import it into it, following the necessary steps as shown in their <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits">GitHub Documentation - Signing commits</a>.</p>
+</li>
+</ol>
+<h3 id="always-use-a-passphrase-exclamation">Always use a Passphrase :exclamation</h3>
+<hr />
+<p>When creating the set of keys you are asked for a passphrase. Set it and remember it or even better write it down somewhere. This is another safety measure but it is essential.</p>
+<h3 id="backing-up-your-revocation-certificate-exclamation">Backing up Your Revocation Certificate :exclamation</h3>
+<hr />
+<p><strong><em>Make sure that you keep a backup of your revocation certificate or that you print it out and store it somewhere safe in case that you were to have to use it.</em></strong></p>
+<h3 id="rotating-your-encryption-keys-exclamation">Rotating Your Encryption Keys :exclamation</h3>
+<hr />
+<p>This being one of the most used capabilities. It is recommended that you rotate these keys to prevent anyone to have access to any of your encrypted information, creating for example new keys in events such as computer change, etc. It is important though to back these up in the event that you were to have files encrypted with these.</p>
+<h3 id="setting-an-expiration-date-exclamation">Setting an Expiration Date :exclamation</h3>
+<hr />
+<p>Another good idea is to set an expiration date not too far in the future in case that you were to not be able to revoke your certificate due to having lost your revocation certificate.</p>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

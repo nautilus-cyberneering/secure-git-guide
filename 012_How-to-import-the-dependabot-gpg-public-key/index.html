@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/012_How-to-import-the-dependabot-gpg-public-key/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>How to import the dependabot GPG public-key - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/012_How-to-import-the-dependabot-gpg-public-key.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#how-to-import-the-dependabot-gpg-public-key">How to import the dependabot GPG public-key</a></li>
+            <li class="second-level"><a href="#links">Links</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="how-to-import-the-dependabot-gpg-public-key">How to import the dependabot GPG public-key</h1>
+<p><img alt="HEADER IMAGE" src="../media/HEADER/GitHub-Repo-SecureGitGuide-ART-012.jpg" /></p>
+<p>THe GitHub <a href="https://github.com/dependabot">dependabot</a> is a <em>GitHub dependency management tool that allows you to manage your dependencies in a way that is easy to use and easy to understand</em>.</p>
+<p>The dependabot checks your dependencies regularly and if it finds any new dependencies it will automatically add them to your repository. This is a great way to keep your dependencies up to date and secure. The dependabot is a <em>GitHub app</em> that runs on your GitHub repository. It creates a new pull request to update your dependencies.</p>
+<p>It updates not only you language dependencies but also the action you use in your workflows.</p>
+<p>A commit from the dependabot looks like this:</p>
+<pre><code class="language-s">git show --show-signature  1ae99046a1e9da0de09cf02ec383a9433acf0665
+commit 1ae99046a1e9da0de09cf02ec383a9433acf0665
+gpg: Signature made mar 07 jun 2022 01:35:52 WEST
+gpg:                using RSA key 4AEE18F83AFDEB23
+gpg: Can't check signature: No public key
+Author: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Date:   Tue Jun 7 00:35:52 2022 +0000
+
+    build(deps): bump actions/setup-node from 3.2.0 to 3.3.0
+
+    Bumps [actions/setup-node](https://github.com/actions/setup-node) from 3.2.0 to 3.3.0.
+    - [Release notes](https://github.com/actions/setup-node/releases)
+    - [Commits](https://github.com/actions/setup-node/compare/v3.2.0...v3.3.0)
+
+    ---
+    updated-dependencies:
+    - dependency-name: actions/setup-node
+      dependency-type: direct:production
+      update-type: version-update:semver-minor
+    ...
+
+    Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+</code></pre>
+<p>As you can see in the line <code>gpg: Can't check signature: No public key</code>, this is a <em>GPG error</em> that means that the dependabot's public GPG key is not installed on your machine.</p>
+<p>You can import the public key by executing this command:</p>
+<pre><code class="language-s">curl https://github.com/web-flow.gpg | gpg --import
+gpg -k 4AEE18F83AFDEB23
+</code></pre>
+<p>If you run the previous command again you will see the following output:</p>
+<pre><code class="language-s">git show --show-signature  1ae99046a1e9da0de09cf02ec383a9433acf0665
+commit 1ae99046a1e9da0de09cf02ec383a9433acf0665
+gpg: Signature made mar 07 jun 2022 01:35:52 WEST
+gpg:                using RSA key 4AEE18F83AFDEB23
+gpg: Good signature from &quot;GitHub (web-flow commit signing) &lt;noreply@github.com&gt;&quot; [unknown]
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: 5DE3 E050 9C47 EA3C F04A  42D3 4AEE 18F8 3AFD EB23
+Author: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Date:   Tue Jun 7 00:35:52 2022 +0000
+
+...
+</code></pre>
+<p>This time you see this message: <code>gpg: Good signature from "GitHub (web-flow commit signing) ...</code></p>
+<p>In order to remove that message you have to trust that key.</p>
+<pre><code class="language-s">$ gpg --edit-key 5DE3E0509C47EA3CF04A42D34AEE18F83AFDEB23
+gpg (GnuPG) 2.2.20; Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+
+pub  rsa2048/4AEE18F83AFDEB23
+     created: 2017-08-16  expires: never       usage: SC  
+     trust: unknown       validity: unknown
+[ unknown] (1). GitHub (web-flow commit signing) &lt;noreply@github.com&gt;
+
+gpg&gt; trust
+pub  rsa2048/4AEE18F83AFDEB23
+     created: 2017-08-16  expires: never       usage: SC  
+     trust: unknown       validity: unknown
+[ unknown] (1). GitHub (web-flow commit signing) &lt;noreply@github.com&gt;
+
+Please decide how far you trust this user to correctly verify other users' keys
+(by looking at passports, checking fingerprints from different sources, etc.)
+
+  1 = I don't know or won't say
+  2 = I do NOT trust
+  3 = I trust marginally
+  4 = I trust fully
+  5 = I trust ultimately
+  m = back to the main menu
+
+Your decision? 5
+Do you really want to set this key to ultimate trust? (y/N) y
+
+pub  rsa2048/4AEE18F83AFDEB23
+     created: 2017-08-16  expires: never       usage: SC  
+     trust: ultimate      validity: unknown
+[ unknown] (1). GitHub (web-flow commit signing) &lt;noreply@github.com&gt;
+Please note that the shown key validity is not necessarily correct
+unless you restart the program.
+
+gpg&gt; quit
+</code></pre>
+<p>Finally, if you show the commit signature again you will see:</p>
+<pre><code class="language-s">$ git show --show-signature  1ae99046a1e9da0de09cf02ec383a9433acf0665
+commit 1ae99046a1e9da0de09cf02ec383a9433acf0665
+gpg: Signature made mar 07 jun 2022 01:35:52 WEST
+gpg:                using RSA key 4AEE18F83AFDEB23
+gpg: Good signature from &quot;GitHub (web-flow commit signing) &lt;noreply@github.com&gt;&quot; [ultimate]
+Author: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Date:   Tue Jun 7 00:35:52 2022 +0000
+
+...
+</code></pre>
+<p>If you want to know more <a href="https://www.gnupg.org/gph/en/manual/x334.html">about validating other keys on your public keyring</a> you can read the <a href="https://www.gnupg.org/gph/en/manual/x334.html">GPG documentation</a>.</p>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="https://www.gnupg.org/gph/en/manual/x334.html">Validating other keys on your public keyring</a></li>
+</ul>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

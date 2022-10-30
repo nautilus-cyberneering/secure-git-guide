@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/008_GPG-How-to-create-a-subkey-for-signing/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>How to create a subkey for signing - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/008_GPG-How-to-create-a-subkey-for-signing.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#how-to-create-a-subkey-for-signing">How to create a subkey for signing</a></li>
+            <li class="second-level"><a href="#links">Links</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="how-to-create-a-subkey-for-signing">How to create a subkey for signing</h1>
+<p><img alt="HEADER IMAGE" src="../media/HEADER/GitHub-Repo-SecureGitGuide-ART-008.jpg" /></p>
+<p>By default, when you create a new GPG key, what you create is a pair of keys:</p>
+<ul>
+<li>The Primary Key</li>
+<li>A subkey for encryption.</li>
+</ul>
+<p>This is a sample output:</p>
+<pre><code class="language-text">pub   rsa3072 2022-03-03 [SC]
+      9DE3 32FB 25C8 A2D6 EDF9  DE8E B5B5 8E7C A8F5 6B98
+uid           [ultimate] Test User &lt;test.user@example.com&gt;
+sub   rsa3072 2022-03-03 [E]
+</code></pre>
+<p>As you can see, the primary key is valid for certification and signing. A much better approach is to use also a different subkey for signing. You can read a full explanation on why that's a better solution in this <a href="https://wiki.debian.org/Subkeys">article about GPG subkeys</a>.</p>
+<p>Git and GitHub official documentation promotes using the GPG keys the way they are created by default. If you want to sign commits and you do not know how to do it, you will probably end up reading Git or GitHub official documentation:</p>
+<ul>
+<li><a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">Git Documentation - Git Tools - Signing Your Work</a></li>
+<li><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits">GitHub Documentation - Signing commits</a></li>
+</ul>
+<p>In those documents, they promote the use of the master or primary key. Or at least, it's what they use. They probably do not want to overwhelm the reader with a lot of GPG technical stuff.</p>
+<p>If you list one of your GPG keys you will see something like:</p>
+<pre><code class="language-text">gpg --list-keys --fingerprint --with-keygrip --with-subkey-fingerprints 88966A5B8C01BD04F3DA440427304EDD6079B81C
+pub   rsa4096 2021-11-19 [SC]
+      8896 6A5B 8C01 BD04 F3DA  4404 2730 4EDD 6079 B81C
+      Keygrip = 449972AC9FF11BCABEED8A7AE834C4349CC4DBFF
+uid           [ultimate] A committer &lt;committer@example.com&gt;
+sub   rsa4096 2021-11-19 [E]
+      B1D4 A248 3D1D 2A02 416B  E077 5B6B DD35 BEDF BF6F
+      Keygrip = 97D36F5B8F5BECDA8A1923FC00D11C7C438584F9
+</code></pre>
+<p>The meaning for the letters inside brackets are the <a href="https://github.com/gpg/gnupg/blob/master/doc/DETAILS#field-12---key-capabilities">GPG key capabilities</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Character</th>
+<th>Capability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S</td>
+<td>Sign</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Certify</td>
+</tr>
+<tr>
+<td>E</td>
+<td>Encrypt</td>
+</tr>
+<tr>
+<td>A</td>
+<td>Authentication</td>
+</tr>
+</tbody>
+</table>
+<p>If you want to create a signing key, you can follow <a href="https://wiki.debian.org/Subkeys">Debian's post</a>. If you do it the output would be something like:</p>
+<pre><code class="language-text">gpg --edit-key 88966A5B8C01BD04F3DA440427304EDD6079B81C
+
+gpg (GnuPG) 2.2.19; Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Secret key is available.
+
+sec  rsa4096/27304EDD6079B81C
+     created: 2021-11-19  expires: never       usage: SC  
+     trust: ultimate      validity: ultimate
+ssb  rsa4096/5B6BDD35BEDFBF6F
+     created: 2021-11-19  expires: never       usage: E   
+[ultimate] (1). A committer &lt;committer@example.com&gt;
+
+gpg&gt; addkey
+Please select what kind of key you want:
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+   (5) Elgamal (encrypt only)
+   (6) RSA (encrypt only)
+  (14) Existing key from card
+Your selection? 4
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (3072) 4096
+Requested keysize is 4096 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 
+Key does not expire at all
+Is this correct? (y/N) y
+Really create? (y/N) y
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+
+sec  rsa4096/27304EDD6079B81C
+     created: 2021-11-19  expires: never       usage: SC  
+     trust: ultimate      validity: ultimate
+ssb  rsa4096/5B6BDD35BEDFBF6F
+     created: 2021-11-19  expires: never       usage: E   
+ssb  rsa4096/3F39AA1432CA6AD7
+     created: 2021-11-26  expires: never       usage: S   
+[ultimate] (1). A committer &lt;committer@example.com&gt;
+
+gpg&gt; save
+</code></pre>
+<p>And this is the key including also keygrips:</p>
+<pre><code class="language-text">gpg --list-keys --fingerprint --with-keygrip --with-subkey-fingerprints 88966A5B8C01BD04F3DA440427304EDD6079B81C
+pub   rsa4096 2021-11-19 [SC]
+      8896 6A5B 8C01 BD04 F3DA  4404 2730 4EDD 6079 B81C
+      Keygrip = 449972AC9FF11BCABEED8A7AE834C4349CC4DBFF
+uid           [ultimate] A committer &lt;committer@example.com&gt;
+sub   rsa4096 2021-11-19 [E]
+      B1D4 A248 3D1D 2A02 416B  E077 5B6B DD35 BEDF BF6F
+      Keygrip = 97D36F5B8F5BECDA8A1923FC00D11C7C438584F9
+sub   rsa4096 2021-11-26 [S]
+      BD98 B3F4 2545 FF93 EFF5  5F7F 3F39 AA14 32CA 6AD7
+      Keygrip = 00CB9308AE0B6DE018C5ADBAB29BA7899D6062BE
+</code></pre>
+<p>If for example, you want to use that subkey to sign git commits, you can replace your git config with:</p>
+<pre><code class="language-text">[user]
+        name = Your Name
+        email = your@email.com
+        signingkey = B29BA7899D6062BE
+</code></pre>
+<p>You should remove all the capabilities from the primary key except for "Certify" ([C]). You can do it by editing the primary key in expert mode. You have to use the option <code>change-usage</code> which is a "hidden" option (not listed with the <code>help</code> command)</p>
+<pre><code class="language-shell">gpg --expert --edit-key 88966A5B8C01BD04F3DA440427304EDD6079B81C
+gpg (GnuPG) 2.2.19; Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Secret key is available.
+
+sec  rsa4096/27304EDD6079B81C
+     created: 2021-11-19  expires: never       usage: SC  
+     trust: ultimate      validity: ultimate
+ssb  rsa4096/5B6BDD35BEDFBF6F
+     created: 2021-11-19  expires: never       usage: E   
+ssb  rsa4096/3F39AA1432CA6AD7
+     created: 2021-11-26  expires: never       usage: S   
+[ultimate] (1). A committer &lt;committer@example.com&gt;
+
+gpg&gt; change-usage
+Changing usage of the primary key.
+
+Possible actions for a RSA key: Sign Certify Encrypt Authenticate 
+Current allowed actions: Sign Certify 
+
+   (S) Toggle the sign capability
+   (E) Toggle the encrypt capability
+   (A) Toggle the authenticate capability
+   (Q) Finished
+
+Your selection? S
+
+Possible actions for a RSA key: Sign Certify Encrypt Authenticate 
+Current allowed actions: Certify 
+
+   (S) Toggle the sign capability
+   (E) Toggle the encrypt capability
+   (A) Toggle the authenticate capability
+   (Q) Finished
+
+Your selection? Q
+
+sec  rsa4096/27304EDD6079B81C
+     created: 2021-11-19  expires: never       usage: C   
+     trust: ultimate      validity: ultimate
+ssb  rsa4096/5B6BDD35BEDFBF6F
+     created: 2021-11-19  expires: never       usage: E   
+ssb  rsa4096/3F39AA1432CA6AD7
+     created: 2021-11-26  expires: never       usage: S   
+[ultimate] (1). A committer &lt;committer@example.com&gt;
+
+gpg&gt; save
+</code></pre>
+<p>After editing the key you should see only the <code>[C]</code> capability on the primary key.</p>
+<pre><code class="language-shell">gpg -k
+/home/josecelano/.gnupg/pubring.kbx
+-----------------------------------
+pub   rsa4096 2021-11-19 [C]
+      88966A5B8C01BD04F3DA440427304EDD6079B81C
+uid           [ultimate] A committer &lt;committer@example.com&gt;
+sub   rsa4096 2021-11-19 [E]
+sub   rsa4096 2021-11-26 [S]
+</code></pre>
+<h2 id="links">Links</h2>
+<ul>
+<li>
+<p><a href="https://wiki.debian.org/Subkeys">Using OpenPGP subkeys in Debian development</a></p>
+</li>
+<li>
+<p><a href="https://blog.tinned-software.net/create-gnupg-key-with-sub-keys-to-sign-encrypt-authenticate/">Create GnuPG key with sub-keys to sign, encrypt, authenticate</a></p>
+</li>
+<li><a href="https://blog.programster.org/generating-gpg-master-and-subkeys">Generate GPG Master and Subkeys</a></li>
+<li><a href="https://blog.programster.org/gpg-subkeys">GPG - Subkeys</a></li>
+<li><a href="https://oguya.ch/posts/2016-04-01-gpg-subkeys/">GPG Subkeys</a></li>
+<li><a href="https://www.void.gr/kargig/blog/2013/12/02/creating-a-new-gpg-key-with-subkeys/">Creating a new GPG key with subkeys</a></li>
+<li><a href="https://spin.atomicobject.com/2013/10/23/secure-gpg-keys/">Generating More Secure GPG Keys: Rationale</a></li>
+</ul>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

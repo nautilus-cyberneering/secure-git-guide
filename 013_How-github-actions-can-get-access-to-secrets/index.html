@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/013_How-github-actions-can-get-access-to-secrets/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>How GitHub Actions can get access to secrets - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/013_How-github-actions-can-get-access-to-secrets.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#how-github-actions-can-get-access-to-secrets">How GitHub Actions can get access to secrets</a></li>
+            <li class="second-level"><a href="#example-using-an-embedded-docker-action">Example using an embedded docker action</a></li>
+                
+            <li class="second-level"><a href="#example-using-an-embedded-typescript-action">Example using an embedded TypeScript action</a></li>
+                
+            <li class="second-level"><a href="#default-permissions-for-github-token">Default permissions for GitHub token</a></li>
+                
+            <li class="second-level"><a href="#good-practices-handling-secrets">Good practices handling secrets</a></li>
+                
+            <li class="second-level"><a href="#other-questions">Other questions</a></li>
+                
+            <li class="second-level"><a href="#links">Links</a></li>
+                
+            <li class="second-level"><a href="#credits">Credits</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="how-github-actions-can-get-access-to-secrets">How GitHub Actions can get access to secrets</h1>
+<p>You can find the source code for the examples in this <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets">repository</a>.</p>
+<ul>
+<li><a href="#example-using-an-embedded-docker-action">Example using an embedded docker action</a></li>
+<li><a href="#example-using-an-embedded-typescript-action">Example using an embedded TypeScript action</a></li>
+<li><a href="#default-permissions-for-github-token">Default permissions for GitHub token</a></li>
+<li><a href="#good-practices-handling-secrets">Good practices handling secrets</a></li>
+<li><a href="#other-questions">Other questions</a></li>
+<li><a href="#links">Links</a></li>
+<li><a href="#credits">Credits</a></li>
+</ul>
+<p><a href="https://github.com/features/actions">GitHub Actions</a> has <a href="https://docs.github.com/en/actions/learn-github-actions/contexts">contexts</a>. Contexts are data structures where GitHub stores the information needed by workflows. There is one special context called <a href="https://docs.github.com/en/actions/learn-github-actions/contexts#secrets-context">secrets context</a>.</p>
+<p>That context contains your secrets and a special secret called <code>GITHUB_TOKEN</code>, automatically added by GitHub. The permissions of the <code>GITHUB_TOKEN</code> depend on your organization's default configuration for the token and the event that triggered the workflow.</p>
+<p>There are three ways to pass secrets to actions:</p>
+<ol>
+<li><a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepswith">Action inputs in the step</a>.</li>
+<li><a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepswithargs">Arguments in the step</a>. Only for docker actions.</li>
+<li><a href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsenv">Environment variables</a>.</li>
+</ol>
+<p>According to GitHub documentation, an action could have access to the <code>GITHUB_TOKEN</code> even if you do not explicitly pass the token in one of the previous ways.</p>
+<blockquote>
+<p>Important: An action can access the <code>GITHUB_TOKEN</code> through the <code>github.token</code> context even if the workflow does not explicitly pass the GITHUB_TOKEN to the action. As a good security practice, you should always make sure that actions only have the minimum access they require by limiting the permissions granted to the <code>GITHUB_TOKEN</code>. For more information, see "Permissions for the GITHUB_TOKEN."</p>
+</blockquote>
+<p>You can read that message <a href="https://docs.github.com/en/actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow">here</a>.</p>
+<p>As far as we know that's only possible because the action can also get a secret from its <code>action.yml</code> configuration file.</p>
+<p>For example, in the GitHub <a href="https://github.com/actions/checkout">actions/checkout@v2</a> action, you can pass the token as an implicit input, but if you do not pass it, the actions will take it from the context and set it as a default value. You can see how the <a href="https://github.com/actions/checkout/blob/2541b1294d2704b0964813337f33b291d3f8596b/action.yml#L24">default value is taken from the context</a>.</p>
+<pre><code class="language-yml">  token:
+    description: &gt;
+        ...
+    default: ${{ github.token }}
+</code></pre>
+<p>That is something not well documented. You can use contexts not only in the workflow <code>yml</code> files but also in the <code>action.yml</code> files.</p>
+<p>You do not have access to all contexts in all places. See <a href="https://docs.github.com/en/actions/learn-github-actions/contexts#context-availability">this table</a> to know what contexts are available and when.</p>
+<p>We have create a demo repository for this article with some examples to understand the GitHub Actions lifecycle.</p>
+<h2 id="example-using-an-embedded-docker-action">Example using an embedded docker action</h2>
+<p>We have created an <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/tree/main/.github/actions/env">embedded docker action</a>. Then we have added a <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/blob/main/.github/workflows/test-env-action.yml">workflow tu run the action</a>. And finally, the action <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/actions/workflows/test-env-action.yml">prints all the environment variables</a> that it receives.</p>
+<ul>
+<li><a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/tree/main/.github/actions/env">The embedded docker action</a>.</li>
+<li><a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/blob/main/.github/workflows/test-env-action.yml">The workflow using the action</a>.</li>
+<li><a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/actions/workflows/test-env-action.yml">The output of the action</a>.</li>
+</ul>
+<p>This is the output:</p>
+<pre><code class="language-s">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=ae6e9d0aeb16
+GITHUB_GRAPHQL_URL=https://api.github.com/graphql
+GITHUB_REF_NAME=main
+GITHUB_REF_PROTECTED=false
+GITHUB_STEP_SUMMARY=/github/file_commands/step_summary_9f775e7c-222f-474c-af92-9e61206d7ce4
+GITHUB_BASE_REF=
+GITHUB_SERVER_URL=https://github.com
+GITHUB_API_URL=https://api.github.com
+GITHUB_ACTION_REPOSITORY=
+RUNNER_ARCH=X64
+RUNNER_WORKSPACE=/home/runner/work/github-actions-secrets
+GITHUB_ACTIONS=true
+GITHUB_JOB=print-env-vars
+GITHUB_REF=refs/heads/main
+GITHUB_ACTOR=josecelano
+GITHUB_ACTION=__self
+GITHUB_REPOSITORY_OWNER=Nautilus-Cyberneering
+GITHUB_HEAD_REF=
+GITHUB_WORKSPACE=/github/workspace
+GITHUB_PATH=/github/file_commands/add_path_9f775e7c-222f-474c-af92-9e61206d7ce4
+RUNNER_OS=Linux
+RUNNER_TEMP=/home/runner/work/_temp
+GITHUB_REPOSITORY=Nautilus-Cyberneering/github-actions-secrets
+GITHUB_ACTION_REF=
+GITHUB_ENV=/github/file_commands/set_env_9f775e7c-222f-474c-af92-9e61206d7ce4
+RUNNER_TOOL_CACHE=/opt/hostedtoolcache
+ACTIONS_RUNTIME_URL=https://pipelines.actions.githubusercontent.com/J2bBGbKRuIqd1wfytSShy42Isw56QMlCsoBc38NVOsni9X2pHC/
+CI=true
+HOME=/github/home
+GITHUB_SHA=87de66d88ac9362ee029a768589d808f4fdad0a2
+GITHUB_RUN_ID=2397754211
+GITHUB_RUN_NUMBER=9
+GITHUB_RUN_ATTEMPT=1
+GITHUB_WORKFLOW=Print env vars in docker
+ACTIONS_RUNTIME_TOKEN=***
+GITHUB_EVENT_NAME=push
+GITHUB_REF_TYPE=branch
+GITHUB_EVENT_PATH=/github/workflow/event.json
+RUNNER_NAME=Hosted Agent
+GITHUB_RETENTION_DAYS=90
+ACTIONS_CACHE_URL=https://artifactcache.actions.githubusercontent.com/J2bBGbKRuIqd1wfytSShy42Isw56QMlCsoBc38NVOsni9X2pHC/
+</code></pre>
+<p>We added some secrets to the repo ans as you can see there are none of them including the GitHub token.</p>
+<h2 id="example-using-an-embedded-typescript-action">Example using an embedded TypeScript action</h2>
+<p>We have also create an <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/tree/main/.github/actions/typescript-print-env">embedded TypeScript action</a> to print all the environment variables.</p>
+<p>This is the <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/actions/workflows/test-typescript-print-env-action.yml">workflow output</a>:</p>
+<p>/<em>spell-checker: disable</em>/</p>
+<pre><code class="language-s">CI=true
+PIPX_HOME=/opt/pipx
+DOTNET_NOLOGO=1
+ImageVersion=20220605.1
+GOROOT_1_17_X64=/opt/hostedtoolcache/go/1.17.11/x64
+RUNNER_USER=runner
+JAVA_HOME_8_X64=/usr/lib/jvm/temurin-8-jdk-amd64
+HOME=/home/runner
+SWIFT_PATH=/usr/share/swift/usr/bin
+DOTNET_MULTILEVEL_LOOKUP=0
+DEPLOYMENT_BASEPATH=/opt/runner
+DEBIAN_FRONTEND=noninteractive
+CONDA=/usr/share/miniconda
+ANT_HOME=/usr/share/ant
+LANG=C.UTF-8
+AZURE_EXTENSION_DIR=/opt/az/azcliextensions
+JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64
+INVOCATION_ID=5d2ec45523744def866f5782b6bd2fd4
+RUNNER_TOOL_CACHE=/opt/hostedtoolcache
+GRAALVM_11_ROOT=/usr/local/graalvm/graalvm-ce-java11-22.1.0
+LEIN_JAR=/usr/local/lib/lein/self-installs/leiningen-2.9.8-standalone.jar
+ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk-bundle
+USER=runner
+ImageOS=ubuntu20
+POWERSHELL_DISTRIBUTION_CHANNEL=GitHub-Actions-ubuntu20
+JAVA_HOME_17_X64=/usr/lib/jvm/temurin-17-jdk-amd64
+GRADLE_HOME=/usr/share/gradle-7.4.2
+VCPKG_INSTALLATION_ROOT=/usr/local/share/vcpkg
+BOOTSTRAP_HASKELL_NONINTERACTIVE=1
+PIPX_BIN_DIR=/opt/pipx_bin
+RUNNER_TRACKING_ID=github_681ec59d-a26f-4c69-86a5-4b87f29a6f29
+GOROOT_1_16_X64=/opt/hostedtoolcache/go/1.16.15/x64
+GOROOT_1_18_X64=/opt/hostedtoolcache/go/1.18.3/x64
+ANDROID_NDK_ROOT=/usr/local/lib/android/sdk/ndk-bundle
+SELENIUM_JAR_PATH=/usr/share/java/selenium-server.jar
+CHROME_BIN=/usr/bin/google-chrome
+AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
+ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+ACCEPT_EULA=Y
+JAVA_HOME_11_X64=/usr/lib/jvm/temurin-11-jdk-amd64
+SGX_AESM_ADDR=1
+ANDROID_NDK_LATEST_HOME=/usr/local/lib/android/sdk/ndk/24.0.8215888
+GECKOWEBDRIVER=/usr/local/share/gecko_driver
+NVM_DIR=/home/runner/.nvm
+ANDROID_HOME=/usr/local/lib/android/sdk
+XDG_CONFIG_HOME=/home/runner/.config
+HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+RUNNER_PERFLOG=/home/runner/perflog
+HOMEBREW_NO_AUTO_UPDATE=1
+JOURNAL_STREAM=8:22886
+LEIN_HOME=/usr/local/lib/lein
+CHROMEWEBDRIVER=/usr/local/share/chrome_driver
+DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/snap/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PERFLOG_LOCATION_SETTING=RUNNER_PERFLOG
+HOMEBREW_CELLAR=/home/linuxbrew/.linuxbrew/Cellar
+HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew
+GITHUB_ACTIONS=true
+HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS=3650
+GITHUB_JOB=print-env-vars
+GITHUB_REF=refs/heads/main
+GITHUB_SHA=21d8327fb47121b483af88dc8df2dcde235a1167
+GITHUB_REPOSITORY=Nautilus-Cyberneering/github-actions-secrets
+GITHUB_REPOSITORY_OWNER=Nautilus-Cyberneering
+GITHUB_RUN_ID=2496310873
+GITHUB_RUN_NUMBER=7
+GITHUB_RETENTION_DAYS=90
+GITHUB_RUN_ATTEMPT=1
+GITHUB_ACTOR=josecelano
+GITHUB_WORKFLOW=Print env vars in TypeScript action
+GITHUB_HEAD_REF=
+GITHUB_BASE_REF=
+GITHUB_EVENT_NAME=push
+GITHUB_SERVER_URL=https://github.com
+GITHUB_API_URL=https://api.github.com
+GITHUB_GRAPHQL_URL=https://api.github.com/graphql
+GITHUB_REF_NAME=main
+GITHUB_REF_PROTECTED=false
+GITHUB_REF_TYPE=branch
+GITHUB_WORKSPACE=/home/runner/work/github-actions-secrets/github-actions-secrets
+GITHUB_ACTION=__self
+GITHUB_EVENT_PATH=/home/runner/work/_temp/_github_workflow/event.json
+GITHUB_ACTION_REPOSITORY=
+GITHUB_ACTION_REF=
+GITHUB_PATH=/home/runner/work/_temp/_runner_file_commands/add_path_b3b81f35-7f4b-4f9c-9d56-c2ad7b770fc5
+GITHUB_ENV=/home/runner/work/_temp/_runner_file_commands/set_env_b3b81f35-7f4b-4f9c-9d56-c2ad7b770fc5
+GITHUB_STEP_SUMMARY=/home/runner/work/_temp/_runner_file_commands/step_summary_b3b81f35-7f4b-4f9c-9d56-c2ad7b770fc5
+RUNNER_OS=Linux
+RUNNER_ARCH=X64
+RUNNER_NAME=GitHub Actions 3
+RUNNER_TEMP=/home/runner/work/_temp
+RUNNER_WORKSPACE=/home/runner/work/github-actions-secrets
+ACTIONS_RUNTIME_URL=https://pipelines.actions.githubusercontent.com/J2bBGbKRuIqd1wfytSShy42Isw56QMlCsoBc38NVOsni9X2pHC/
+ACTIONS_RUNTIME_TOKEN=***
+ACTIONS_CACHE_URL=https://artifactcache.actions.githubusercontent.com/J2bBGbKRuIqd1wfytSShy42Isw56QMlCsoBc38NVOsni9X2pHC/
+</code></pre>
+<p>/<em>spell-checker: enable</em>/</p>
+<h2 id="default-permissions-for-github-token">Default permissions for GitHub token</h2>
+<p>The <code>GITHUB_TOKEN</code> secret is added automatically to all workflows executions. You can remove all the permissions. By default it has all the permissions you define at the organization level.</p>
+<p>You can <a href="https://github.blog/changelog/2021-04-20-github-actions-control-permissions-for-github_token/">set the default permissions for the organization or repository</a>.</p>
+<blockquote>
+<p>WARNING: by default <code>GITHUB_TOKEN</code> has all the permissions!</p>
+</blockquote>
+<h2 id="good-practices-handling-secrets">Good practices handling secrets</h2>
+<p>Given that actions do not have direct access to secrets, the only way to give access to them is by explicitly passing them. But you have to be careful because there could ways to do that without you even knowing it. You can read <a href="https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#accessing-secrets">here</a> different ways to accidentally pass secrets to actions.</p>
+<p>For example, if you define an environment variable at the workflow level like this:</p>
+<pre><code class="language-s">env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+</code></pre>
+<p>All the actions in your workflow will have access to the token.</p>
+<p>Some good practices proposed by <a href="https://github.com/hosom">Stephen Hosom</a> are:</p>
+<ul>
+<li>
+<p>Environments are a great way to isolate secrets. Combine environments with environment rules that dictate which branches that they can be accessed from for the best isolation of your secrets.</p>
+</li>
+<li>
+<p>As a general rule, try to use the lower scope for secrets: environment, repository, organization.</p>
+</li>
+<li>
+<p>Repository secrets can be useful for secrets that are used in nearly every or every job within the repository, but we don't recommend them for anything that has write on a system or read to sensitive information.</p>
+</li>
+<li>
+<p>Restricting write access where possible is GOOD. This isn't always possible, so there are mitigating controls you can use. Using a CODEOWNERS file prevents unauthorized edits to workflows. This isn't one size fits all. Some workflows can be triggered based on branches and won't require a request reviewer to approve.</p>
+</li>
+<li>
+<p>Restricting an environment to only run off of a specific branch is the biggest defense you have. This means that even if your workflow includes a write token and CODEOWNERS can be bypassed because the action can execute from a branch, it still won't have access to your secrets.</p>
+</li>
+</ul>
+<p>And other things to consider:</p>
+<ul>
+<li>If you have a job linked to an environment you should act as if all actions in that job could have access to all the environment secrets. So do not mix actions with different levels of access to your secrets.</li>
+</ul>
+<h2 id="other-questions">Other questions</h2>
+<p><strong>Do actions only have have access to the secrets when you pass the secrets to them via inputs, arguments, environment vars or input default values in action.yml?</strong></p>
+<p>Yes, they do. But the only secret accessible via default values in an <code>action.yml</code> is the <code>GITHUB_TOKEN</code>, all other secrets must be passed explicitly.</p>
+<p>The one exception is reusable workflows that can pass all secrets, rather than specifying individual ones using the <code>secrets: inherit</code> option: <a href="https://docs.github.com/en/actions/using-workflows/reusing-workflows#passing-inputs-and-secrets-to-a-reusable-workflow">https://docs.github.com/en/actions/using-workflows/reusing-workflows#passing-inputs-and-secrets-to-a-reusable-workflow</a>.</p>
+<p><strong>Is there a way to completely disable the GITHUB_TOKEN in a workflow?</strong></p>
+<p>No, there is not.</p>
+<p><strong>Is there a way to completely disable access to secrets in a workflow?</strong></p>
+<p>As you can see in this <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/blob/main/.github/workflows/disable-github-token.yml">workflow example</a>, even if you disable the permissions for the <code>GITHUB_TOKEN</code> you are still able to get the secrets because you get them from the context, not using the <code>GITHUB_TOKEN</code>.</p>
+<p>You can check any of the <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/actions/workflows/disable-github-token.yml">workflow executions</a>. In the "Setup Job" you will find a line like this:</p>
+<pre><code class="language-s">GITHUB_TOKEN Permissions
+  Metadata: read
+</code></pre>
+<p>With the permissions assigned to the <code>GITHUB_TOKEN</code>.</p>
+<p><strong>Are contexts stored on disk in the GitHub runners?</strong></p>
+<p>As far as we know, they are not. But something we miss from the documentation it's a better explanation of the lifecycle of the runners and how it is the communication between GitHub and runners. We assume that the context for jobs is used only at the Github's servers. The secrets are shared with the runner only before executing a job and they are not stored on the disk.</p>
+<p>The documentation says the secrets are deleted from memory when the job is done.</p>
+<blockquote>
+<p>Although GitHub Actions scrubs secrets from memory that are not referenced in the workflow (or an included action), the GITHUB_TOKEN and any referenced secrets can be harvested by a determined attacker.</p>
+</blockquote>
+<p><em>It's best to assume that a malicious action has access to any secrets or information that the runner has for that a job - regardless of if the secrets are on disk or in memory. Actions are not sandboxed within a workflow job, the security boundary is only between jobs/runs.</em></p>
+<p>See <a href="https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#accessing-secrets">accessing secrets</a>.</p>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="https://lab.github.com/githubtraining/securing-your-workflows">GitHub Course - Securing your workflows</a>.</li>
+<li><a href="https://github.community/t/accessing-gh-context-in-actions/206203">Accessing GH context in actions</a>.</li>
+<li><a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/pull/4">Original discussion about this article</a>.</li>
+</ul>
+<h2 id="credits">Credits</h2>
+<p>Thank to <a href="https://github.com/cgbosse">Constantin Bosse</a> and <a href="https://github.com/hosom">Stephen Hosom</a> who carefully review the <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/pull/4">original version of this article</a>.</p>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

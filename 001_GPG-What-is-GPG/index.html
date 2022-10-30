@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/001_GPG-What-is-GPG/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>GPG - What is GPG - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/001_GPG-What-is-GPG.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#gpg-what-is-gpg">GPG - What is GPG</a></li>
+            <li class="second-level"><a href="#brief-summary">Brief Summary</a></li>
+                
+            <li class="second-level"><a href="#overview">Overview</a></li>
+                
+                <li class="third-level"><a href="#public-key">Public key</a></li>
+                <li class="third-level"><a href="#cipher">Cipher</a></li>
+                <li class="third-level"><a href="#hash">Hash</a></li>
+                <li class="third-level"><a href="#compression">Compression</a></li>
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="gpg-what-is-gpg">GPG - What is GPG</h1>
+<p><img alt="HEADER IMAGE" src="../media/HEADER/GitHub-Repo-SecureGitGuide-ART-001.jpg" /></p>
+<p>Note: Source <a href="https://en.wikipedia.org/wiki/GNU_Privacy_Guard">WIKIPEDIA</a></p>
+<hr />
+<h2 id="brief-summary">Brief Summary</h2>
+<p>GNU Privacy Guard (GnuPG or GPG) is a free-software replacement for Symantec's PGP cryptographic software suite. The software is compliant with RFC 4880, the IETF standards-track specification of OpenPGP. Modern versions of PGP are interoperable with GnuPG and other OpenPGP-compliant systems.</p>
+<h2 id="overview">Overview</h2>
+<p>GnuPG is a hybrid-encryption software program because it uses a combination of conventional symmetric-key cryptography for speed, and public-key cryptography for ease of secure key exchange, typically by using the recipient's public key to encrypt a session key which is used only once. This mode of operation is part of the OpenPGP standard and has been part of PGP from its first version.</p>
+<p>The GnuPG 1.x series uses an integrated cryptographic library, while the GnuPG 2.x series replaces this with Libgcrypt.</p>
+<p>GnuPG encrypts messages using asymmetric key pairs individually generated by GnuPG users. The resulting public keys may be exchanged with other users in a variety of ways, such as Internet key servers. They must always be exchanged carefully to prevent identity spoofing by corrupting public key ↔ "owner" identity correspondences. It is also possible to add a cryptographic digital signature to a message, so the message integrity and sender can be verified, if a particular correspondence relied upon has not been corrupted.</p>
+<p>GnuPG also supports symmetric encryption algorithms. By default, GnuPG uses the AES symmetrical algorithm since version 2.1, CAST5 was used in earlier versions. GnuPG does not use patented or otherwise restricted software or algorithms. Instead, GnuPG uses a variety of other, non-patented algorithms.</p>
+<p>For a long time, it did not support the IDEA encryption algorithm used in PGP. It was in fact possible to use IDEA in GnuPG by downloading a plugin for it, however, this might require a license for some uses in countries in which IDEA was patented. Starting with versions 1.4.13 and 2.0.20, GnuPG supports IDEA because the last patent of IDEA expired in 2012. Support of IDEA is intended "to get rid of all the questions from folks either trying to decrypt old data or migrating keys from PGP to GnuPG", and hence is not recommended for regular use.</p>
+<p>As of 2.2 versions, GnuPG supports the following algorithms:</p>
+<h3 id="public-key">Public key</h3>
+<p>RSA, ElGamal, DSA, ECDH, ECDSA, EdDSA</p>
+<h3 id="cipher">Cipher</h3>
+<p>3DES, IDEA (since versions 1.4.13 and 2.0.20), CAST5, Blowfish, Twofish, AES-128, AES-192, AES-256, Camellia-128, -192 and -256 (since versions 1.4.10 and 2.0.12)</p>
+<h3 id="hash">Hash</h3>
+<p>MD5, SHA-1, RIPEMD-160, SHA-256, SHA-384, SHA-512, SHA-224</p>
+<h3 id="compression">Compression</h3>
+<p>Uncompressed, ZIP, ZLIB, BZIP2</p>
+<p>More recent releases of GnuPG 2.x ("modern" and the now deprecated "stable" series) expose most cryptographic functions and algorithms Libgcrypt (its cryptography library) provides, including support for elliptic curve cryptography (ECDH, ECDSA and EdDSA) in the "modern" series (i.e. since GnuPG 2.1).</p>
+<hr />
+<p>Note: Source <a href="https://en.wikipedia.org/wiki/GNU_Privacy_Guard">WIKIPEDIA</a></p>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/003-GPG-101-How-to-get-your-first-GPG-Keys/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>GPG - 101 - How to get your first GPG Keys - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/003-GPG-101-How-to-get-your-first-GPG-Keys.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#gpg-101-how-to-get-your-first-gpg-keys">GPG - 101 - How to get your first GPG Keys</a></li>
+            <li class="second-level"><a href="#installing-gpg">Installing GPG</a></li>
+                
+            <li class="second-level"><a href="#gpg4win-kleopatra">GPG4Win Kleopatra</a></li>
+                
+                <li class="third-level"><a href="#generating-your-own-new-gpg-keys">Generating your own new GPG Keys</a></li>
+                <li class="third-level"><a href="#creating-a-revocation-certificate">Creating a Revocation Certificate</a></li>
+                <li class="third-level"><a href="#sample-public-gpg-key">Sample Public GPG Key</a></li>
+            <li class="second-level"><a href="#command-line-or-terminal">Command Line or Terminal</a></li>
+                
+                <li class="third-level"><a href="#default-setup">Default Setup</a></li>
+                <li class="third-level"><a href="#full-setup">Full Setup</a></li>
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="gpg-101-how-to-get-your-first-gpg-keys">GPG - 101 - How to get your first GPG Keys</h1>
+<p><img alt="HEADER IMAGE" src="../media/HEADER/GitHub-Repo-SecureGitGuide-ART-003.jpg" /></p>
+<h2 id="installing-gpg">Installing GPG</h2>
+<p>The steps to install GPG on your computer are the following:</p>
+<ol>
+<li>Download the necessary software for your Operating System at:<ul>
+<li><a href="https://gpg4win.org/download.html">Windows</a></li>
+<li><a href="https://linuxhint.com/gpg-command-ubuntu/">Linux - Installed through terminal</a></li>
+<li><a href="https://sourceforge.net/p/gpgosx/docu/Download/">Mac OS</a></li>
+</ul>
+</li>
+</ol>
+<h2 id="gpg4win-kleopatra">GPG4Win Kleopatra</h2>
+<h3 id="generating-your-own-new-gpg-keys">Generating your own new GPG Keys</h3>
+<hr />
+<p>Generating your own new GPG Keys is extremely easy.
+Here is a series of screenshots of the process using the Kleopatra application for Windows.</p>
+<p>(1)</p>
+<p><img alt="001" src="../media/003/KLEO_CREATE_001.png" /></p>
+<p>(2)</p>
+<p><img alt="002" src="../media/003/KLEO_CREATE_002.png" /></p>
+<p><strong>It is extremely important to use a passphrase and more important if you use it to actually write it down somewhere so that you never loose it.</strong></p>
+<p>(3)</p>
+<p><img alt="003" src="../media/003/KLEO_CREATE_003.png" /></p>
+<p>(4)</p>
+<p><img alt="004" src="../media/003/KLEO_CREATE_004.png" /></p>
+<p>(5)</p>
+<p><img alt="005" src="../media/003/KLEO_CREATE_005.png" /></p>
+<p>(6)</p>
+<p><img alt="006" src="../media/003/KLEO_CREATE_006.png" /></p>
+<p>(7)</p>
+<p><img alt="007" src="../media/003/KLEO_CREATE_007.png" /></p>
+<p>(8)</p>
+<p><img alt="008" src="../media/003/KLEO_CREATE_008.png" /></p>
+<p>(9)</p>
+<p><img alt="009" src="../media/003/KLEO_CREATE_009.png" /></p>
+<p>(10)</p>
+<p><img alt="010" src="../media/003/KLEO_CREATE_010.png" /></p>
+<p>(11)</p>
+<p><img alt="011" src="../media/003/KLEO_CREATE_011.png" /></p>
+<h3 id="creating-a-revocation-certificate">Creating a Revocation Certificate</h3>
+<hr />
+<p>(1)</p>
+<p><img alt="012" src="../media/003/KLEO_CREATE_012.png" /></p>
+<p>(2)</p>
+<p><img alt="013" src="../media/003/KLEO_CREATE_013.png" /></p>
+<p>(3)</p>
+<p><img alt="014" src="../media/003/KLEO_CREATE_014.png" /></p>
+<p>(4)</p>
+<p><img alt="015" src="../media/003/KLEO_CREATE_015.png" /></p>
+<h3 id="sample-public-gpg-key">Sample Public GPG Key</h3>
+<hr />
+<p><img alt="016" src="../media/003/KLEO_CREATE_016.png" /></p>
+<h2 id="command-line-or-terminal">Command Line or Terminal</h2>
+<p>In order to generate your new keys you have two options:</p>
+<ul>
+<li>Running the default setup.</li>
+<li>Running the full setup which lets you define some additional specifications such as the encryption level.</li>
+</ul>
+<h3 id="default-setup">Default Setup</h3>
+<hr />
+<p>Open the command line as an admin and type:</p>
+<pre><code>```terminal
+gpg --gen-keys
+```
+</code></pre>
+<p>(1)</p>
+<p><img alt="cli001" src="../media/003/CLI_CREATE_001.png" /></p>
+<p>(2)</p>
+<p><img alt="cli002" src="../media/003/CLI_CREATE_002.png" /></p>
+<p>(3)</p>
+<p><img alt="cli003" src="../media/003/CLI_CREATE_003.png" /></p>
+<p>(4)</p>
+<p><img alt="cli004" src="../media/003/CLI_CREATE_004.png" /></p>
+<p>(5)</p>
+<p><img alt="cli005" src="../media/003/CLI_CREATE_005.png" /></p>
+<p>(6)</p>
+<p><img alt="cli006" src="../media/003/CLI_CREATE_006.png" /></p>
+<p>Once this has been done the keys get generated with the default encryption level of 3072.</p>
+<h3 id="full-setup">Full Setup</h3>
+<hr />
+<p>This option lets you:</p>
+<ul>
+<li>Define the encryption level up to 4096.</li>
+<li>Insert a comment.</li>
+<li>Define the key type (RSA, DSA, Elgamal, etc.).</li>
+</ul>
+<p>It automatically generates also a revocation certificate at the default location which is indicated at the final step.</p>
+<p>Open the command line as an admin and type:</p>
+<pre><code>```terminal
+gpg --full-generate-keys
+```
+</code></pre>
+<h4 id="defining-the-key-type">Defining the key type</h4>
+<p>(1)</p>
+<p><img alt="cliFgk001" src="../media/003/CLI_CREATE_fgk_001.png" /></p>
+<p>(2)</p>
+<p><img alt="cliFgk002" src="../media/003/CLI_CREATE_fgk_002.png" /></p>
+<h4 id="defining-the-encryption-level">Defining the encryption level</h4>
+<p>(3)</p>
+<p><img alt="cliFgk003" src="../media/003/CLI_CREATE_fgk_003.png" /></p>
+<p>(4)</p>
+<p><img alt="cliFgk004" src="../media/003/CLI_CREATE_fgk_004.png" /></p>
+<h4 id="defining-the-expiration-date">Defining the expiration date</h4>
+<p>(5)</p>
+<p><img alt="cliFgk005" src="../media/003/CLI_CREATE_fgk_005.png" /></p>
+<p>(6)</p>
+<p><img alt="cliFgk006" src="../media/003/CLI_CREATE_fgk_006.png" /></p>
+<p>(7)</p>
+<p><img alt="cliFgk007" src="../media/003/CLI_CREATE_fgk_007.png" /></p>
+<h4 id="defining-the-user-id-to-identify-the-key">Defining the user ID to identify the key</h4>
+<p>(8)</p>
+<p><img alt="cliFgk008" src="../media/003/CLI_CREATE_fgk_008.png" /></p>
+<p>(9)</p>
+<p><img alt="cliFgk009" src="../media/003/CLI_CREATE_fgk_009.png" /></p>
+<p>(10)</p>
+<p><img alt="cliFgk010" src="../media/003/CLI_CREATE_fgk_010.png" /></p>
+<p>(11)</p>
+<p><img alt="cliFgk011" src="../media/003/CLI_CREATE_fgk_011.png" /></p>
+<h4 id="final-screen-with-revocation-certificate-location">Final screen with revocation certificate location</h4>
+<p>(12)</p>
+<p><img alt="cliFgk012" src="../media/003/CLI_CREATE_fgk_012.png" /></p>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

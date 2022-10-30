@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/014_Sharing-GitHub-secrets-with-third-party-actions/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>GitHub Actions: sharing your secrets with third-party actions - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/014_Sharing-GitHub-secrets-with-third-party-actions.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#github-actions-sharing-your-secrets-with-third-party-actions">GitHub Actions: sharing your secrets with third-party actions</a></li>
+            <li class="second-level"><a href="#default-installation-for-megalinter">Default installation for MegaLinter</a></li>
+                
+            <li class="second-level"><a href="#github-token-permissions">GitHub token permissions</a></li>
+                
+            <li class="second-level"><a href="#setup-the-workflow-with-the-minimum-permissions">Setup the workflow with the minimum permissions</a></li>
+                
+            <li class="second-level"><a href="#solution-1-using-codeowners-configuration">Solution 1: Using CODEOWNERS configuration</a></li>
+                
+            <li class="second-level"><a href="#solution-2-using-branch-protection-rules-and-environment-secrets">Solution 2: Using branch protection rules and environment secrets</a></li>
+                
+            <li class="second-level"><a href="#solution-3-using-a-different-repository-to-run-megalinter">Solution 3: Using a different repository to run MegaLinter</a></li>
+                
+                <li class="third-level"><a href="#conclusion">Conclusion</a></li>
+            <li class="second-level"><a href="#links">Links</a></li>
+                
+            <li class="second-level"><a href="#credits">Credits</a></li>
+                
+            <li class="second-level"><a href="#megalinter-team-comment">MegaLinter team comment</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="github-actions-sharing-your-secrets-with-third-party-actions">GitHub Actions: sharing your secrets with third-party actions</h1>
+<p>One of the main advantages with GitHub Actions is that you can easily reuse actions in your workflows. You only need to search for what you need on the <a href="https://github.com/marketplace">marketplace</a>.
+But it is also a big risk. When you start using third-party packages, you can easily get into a situation where you have to deal with a security issue. The more dependencies you have, the riskier it is.</p>
+<p>At least, you should make sure you trust the action provider.</p>
+<p>There is an even worse case when the action itself has a lot of dependencies. That is the case for <a href="https://megalinter.github.io/">Megalinter</a>.</p>
+<p>MegaLinter is a <em>"tool for CI/CD workflows that analyzes consistency and quality"</em>. It has a lot of dependencies. When you use MegaLinter in your workflow you are sharing data not only with MegaLinter team but with hundreds of other teams with millions of lines of code. If you make a mistake and you share a secret with that action, your secrets will not be a secret anymore.</p>
+<p>That is why we have been wondering if the MegaLinter itself could be a security problem and what could be the safest way tu run it.</p>
+<ul>
+<li><a href="#default-installation-for-megalinter">Default installation for MegaLinter</a></li>
+<li><a href="#github-token-permissions">GitHub token permissions</a></li>
+<li><a href="#setup-the-workflow-with-the-minimum-permissions">Setup the workflow with the minimum permissions</a></li>
+<li><a href="#links">Links</a></li>
+<li><a href="#credits">Credits</a></li>
+</ul>
+<h2 id="default-installation-for-megalinter">Default installation for MegaLinter</h2>
+<p>Supposing you created a new organization on GitHub, and a new repository and you wanted to use MegaLinter. After <a href="https://oxsecurity.github.io/megalinter/latest/installation/">installing</a> it, it would have added a workflow with this step:</p>
+<pre><code class="language-yml">- name: MegaLinter
+    id: ml
+    uses: megalinter/megalinter/flavors/documentation@v5
+    env:
+        VALIDATE_ALL_CODEBASE: true
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+</code></pre>
+<p>That means you are passing the <code>GITHUB_TOKEN</code> as an environment variable. MegaLinter is a docker action and it is called this way on the GitHub runners:</p>
+<!-- spell-checker: disable -->
+
+<pre><code class="language-s">/usr/bin/docker run --name megalintermegalinterdocumentationv5_b424a0 --label 08450d --workdir /github/workspace --rm -e VALIDATE_ALL_CODEBASE -e GITHUB_TOKEN -e HOME -e GITHUB_JOB -e GITHUB_REF -e GITHUB_SHA -e GITHUB_REPOSITORY -e GITHUB_REPOSITORY_OWNER -e GITHUB_RUN_ID -e GITHUB_RUN_NUMBER -e GITHUB_RETENTION_DAYS -e GITHUB_RUN_ATTEMPT -e GITHUB_ACTOR -e GITHUB_WORKFLOW -e GITHUB_HEAD_REF -e GITHUB_BASE_REF -e GITHUB_EVENT_NAME -e GITHUB_SERVER_URL -e GITHUB_API_URL -e GITHUB_GRAPHQL_URL -e GITHUB_REF_NAME -e GITHUB_REF_PROTECTED -e GITHUB_REF_TYPE -e GITHUB_WORKSPACE -e GITHUB_ACTION -e GITHUB_EVENT_PATH -e GITHUB_ACTION_REPOSITORY -e GITHUB_ACTION_REF -e GITHUB_PATH -e GITHUB_ENV -e GITHUB_STEP_SUMMARY -e RUNNER_OS -e RUNNER_ARCH -e RUNNER_NAME -e RUNNER_TOOL_CACHE -e RUNNER_TEMP -e RUNNER_WORKSPACE -e ACTIONS_RUNTIME_URL -e ACTIONS_RUNTIME_TOKEN -e ACTIONS_CACHE_URL -e GITHUB_ACTIONS=true -e CI=true -v &quot;/var/run/docker.sock&quot;:&quot;/var/run/docker.sock&quot; -v &quot;/home/runner/work/_temp/_github_home&quot;:&quot;/github/home&quot; -v &quot;/home/runner/work/_temp/_github_workflow&quot;:&quot;/github/workflow&quot; -v &quot;/home/runner/work/_temp/_runner_file_commands&quot;:&quot;/github/file_commands&quot; -v &quot;/home/runner/work/github-actions-secrets/github-actions-secrets&quot;:&quot;/github/workspace&quot; megalinter/megalinter-documentation:v5  &quot;-v&quot; &quot;/var/run/docker.sock:/var/run/docker.sock:rw&quot;
+</code></pre>
+<!-- spell-checker: enable -->
+
+<p>You can check it on any of the <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/actions/workflows/mega-linter.yml">workflow executions</a> in <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets">this repo</a>.</p>
+<p>As you can see there is an environment variable <code>-e GITHUB_TOKEN</code>. MegaLinter has 97 packages at the moment. That means there are a lot of dependencies that have access to the <code>GITHUB_TOKEN</code>.</p>
+<h2 id="github-token-permissions">GitHub token permissions</h2>
+<p>The <code>GITHUB_TOKEN</code> is a <a href="https://docs.github.com/en/actions/security-guides/automatic-token-authentication">GitHub Action Token Secret</a> that is automatically generated and is used to authenticate the GitHub API.</p>
+<p><strong>But, what could MegaLinter and its dependencies do with that token?</strong></p>
+<p>Currently, the <a href="https://github.blog/changelog/2021-04-20-github-actions-control-permissions-for-github_token/">default permissions for all workflows</a> in any organization are:</p>
+<pre><code class="language-yml">permissions:
+  actions: read|write
+  checks: read|write
+  contents: read|write
+  deployments: read|write
+  issues: read|write
+  packages: read|write
+  pull-requests: read|write
+  repository-projects: read|write
+  security-events: read|write
+  statuses: read|write
+</code></pre>
+<p>If you do not overwrite those permissions for the MegaLinter workflow, the MegalInter will have full write access to the API when the workflow is executed by a maintainer in a local branch. For forked repositories, GitHub automatically changes the <a href="https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token">permissions</a> of the <code>GITHUB_TOKEN</code> to only "read". But you still have read access to all the data. In most cases, you probably do not need it.</p>
+<p>So with that default configuration, any of the MegaLinter packages could use the token to create a new branch, create or modify a new workflow and export all your secrets.</p>
+<p><strong>Could the MegaLinter or any other action export the secrets without modifying a workflow?</strong></p>
+<p>Given that the MegaLinter or in general any other third-party action you are suing has access to the <code>GITHUB_TOKEN</code> with "contents: write" permission, what could that action do? could the action export the secrets without modifying a workflow just using the token?</p>
+<p>The answer is No, it cannot. Even it the action has access to the <code>GITHUB_TOKEN</code> there is no way to directly get the secrets from the API. The only way to get the secrets is by modifying a workflow and export or print them.</p>
+<p>Fir instance, MegaLinter could release a new minor version of their package with malicious code. They could update one of the embedded packages in the docker image and that package could contain malicious code to obtain secrets using the <code>GITHUB_TOKEN</code>. Since you normally use a major version for the action <code>megalinter/megalinter/flavors/documentation@v5</code> you would use the newer version on the next workflow execution.</p>
+<p>Actions cannot obtain the secrets (including <code>GITHUB_TOKEN</code>) if you do not pass them explicitly. See the article <a href="../013_How-github-actions-can-get-access-to-secrets/">How GitHub Actions can get access to secrets</a>. If the action has access to the <code>GITHUB_TOKEN</code> because you explicitly pass it, it could modify a workflow to export the secrets. The basic security rule for GitHub Actions is: if you can modify a branch you can get all the secrets linked to that branch which includes not only environment secrets but also repository and organization secrets.</p>
+<h2 id="setup-the-workflow-with-the-minimum-permissions">Setup the workflow with the minimum permissions</h2>
+<p>According to the <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">Principle of least privilege</a>, we should grant MegaLinter only the permissions it needs. Depending on whether you want MegalInter to create comments on your PRs or auto-fix things you might need to give extra permissions to it.</p>
+<p>There are some courses and articles explaining how to implement secure workflows with GitHub Actions. See the <a href="#links">links</a> below.</p>
+<p>Things you could do to make your GitHub organization more secure:</p>
+<ol>
+<li>
+<p>Change the default token permissions for the organization. You can <a href="https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#configuring-the-default-github_token-permissions">change the default permissions</a> granted to the <code>GITHUB_TOKEN</code> to read-only.</p>
+</li>
+<li>
+<p>Remove all permissions on the workflow for the token. You can do it by adding the following to the <code>.github/workflows/mega-linter.yml</code> file: <code>permissions: {}</code>.</p>
+</li>
+<li>
+<p>Gran each workflow only the permissions it needs.</p>
+</li>
+</ol>
+<p>Depending on what you want the MegaLinter to do you will need to grant some specific permissions. For example <code>pull-requests: write</code> if you want it to write comments on pull requests or <code>contents: write</code> if you want it to auto-fix your code and push the changes. As we mentioned before, the risky permission is <code>contents: write</code>.</p>
+<blockquote>
+<p>NOTICE: you do not even need to give <code>contents: read</code> permission to the <code>GITHUB_TOKEN</code> in order to checkout the code if the repo is a public repo.</p>
+</blockquote>
+<p>But, what happens if you want to give MegaLinter <code>contents: write</code> permission? is there a way to avoid giving access to those 97 packages to your secrets?</p>
+<h2 id="solution-1-using-codeowners-configuration">Solution 1: Using CODEOWNERS configuration</h2>
+<p>One of the solutions provided by GitHub is the <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners">CODEOWNERS</a> file.</p>
+<p>If actions can only get secrets from arguments and we are only passing the <code>GITHUB_TOKEN</code> to the action, the only way to get the secrets is by modifying a workflow to export the secrets. The CODEOWNERS file allows the repo admins to specify who should review changes on certain files. You could configure a team that has access to the <code>.\github\workflows</code> directory but this would not work because:</p>
+<ul>
+<li>CODEOWNERS only works on pull requests. And in that case, <code>contents: write</code> permission is not granted anyway.</li>
+<li>We are talking about branches created on the same repo by developers who already have write access. Even if the file requires a review by the user, the user is allowed to modify and review those files.</li>
+</ul>
+<p>So there is no option to limit the write access to the workflow files.</p>
+<h2 id="solution-2-using-branch-protection-rules-and-environment-secrets">Solution 2: Using branch protection rules and environment secrets</h2>
+<p>You could avoid using repository level secrets. If all your secrets are <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-an-environment">environment secrets</a> the MegaLinter action would not have access to those secrets. Only the jobs linked to the environment could have access to those secrets.</p>
+<p>We think this is a good practice anyway because normally secrets are related to one environment. But in some cases, having a repository secret makes sense, so this solution is not possible always.</p>
+<p>As a general good practice you should try using the lowest scope possible for your secrets.</p>
+<p>Repository secrets can be useful for secrets that are used in nearly every or every job within the repository, but we don't recommend them for anything that has write on a system or read to sensitive information.</p>
+<h2 id="solution-3-using-a-different-repository-to-run-megalinter">Solution 3: Using a different repository to run MegaLinter</h2>
+<p>If you want to run the MegaLinter, for example, on every push to the <code>main</code> branch, you could create a MegaLinter repository that has a workflow that runs MegaLinter for a different repo. It would be a kind of MegaLinter worker.</p>
+<p>Although it might work, it does not seem to be an easy solution, both to implement and use.</p>
+<p>Besides, the problem was we wanted to give MegaLinter write permissions to auto-fix and push errors and in this case, we still would need write access to the remote origin repo.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>There is no way to give MegaLinter write permission without trusting its 97 packages not to steal your secrets. Either you disable write permissions and fix things manually or you stick to a concrete docker image (hash) and you review carefully all the package updates.</p>
+<p>Maybe the best approach is a combination of all the previous solutions adding branch protection rules and environment secrets.</p>
+<ul>
+<li>A <code>CODEOWNERS</code> file preventing Actions from both opening and approving a PR to modify Actions.</li>
+<li>A <code>GITHUB_TOKEN</code> with reduced privileges either by changing the defaults at the repository level or explicitly defining your required permissions at the workflow level.</li>
+<li>Environment protections isolating sensitive credentials from general purpose linters and unit test jobs. The MegaLiner could be run only for <code>develop</code> branch linked to <code>develop</code> environment without any sensitive secret.</li>
+</ul>
+<p>Even with that configuration if you are a maintainer and you run MegaLinter with the "push" event MegaLinter could get access the all secrets. So, you should:</p>
+<ul>
+<li>Disable the MegaLinter workflow for the <code>push</code> event.</li>
+<li>Try to always use PRs from forks even by maintainers.</li>
+</ul>
+<p>or:</p>
+<ul>
+<li>Disable auto-fix feature.</li>
+</ul>
+<p>Disabling auto-fix feature to avoid giving MegaLinter write access is not a big problem since you can run MegaLinter locally before pushing your changes.</p>
+<p>If you have an alternative solution, please do not hesitate to <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions">open a new discussion</a> on this repo.</p>
+<p>You might argue that that's the same problem you have when you trust all your node dependencies. For example, you might be using some development dependencies on your tests. If you run tests when a developer pushes a new commit to the <code>main</code> branch, you are giving those dependencies access to those secrets. Maybe that's another example of things you could be doing wrongly.</p>
+<p>In general, we found the environment secrets solution to be the best solution. You should only use organization or repository secrets for secrets that could be potentially captured by third-party development tools. And use those secrets with your custom actions, actions you completely trust or actions you review.</p>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="https://lab.github.com/githubtraining/securing-your-workflows">GitHub Course - Securing your workflows</a>.</li>
+<li><a href="https://github.community/t/accessing-gh-context-in-actions/206203">Accessing GH context in actions</a>.</li>
+<li><a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/pull/4">Original discussion about this article</a>.</li>
+</ul>
+<h2 id="credits">Credits</h2>
+<p>Thank to <a href="https://github.com/cgbosse">Constantin Bosse</a> and <a href="https://github.com/hosom">Stephen Hosom</a> who carefully review the <a href="https://github.com/Nautilus-Cyberneering/github-actions-secrets/pull/4">original version of this article</a>.</p>
+<h2 id="megalinter-team-comment">MegaLinter team comment</h2>
+<blockquote>
+<p>Thanks a lot for this great article, its content is very interesting :)</p>
+<p>About trusting all the linters and their dependencies, I agree that risk zero does not exist, but since <a href="https://oxsecurity.github.io/megalinter/latest/">MegaLinter</a> is part of <a href="https://www.ox.security">ox.security</a>, its own sources are watched by Ox services to detect security issues, including supply chain attacks</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/17500430/198858440-3c8c7a3d-60c8-4035-a8af-b97c96e385a8.png" /></p>
+<p><a href="https://github.com/nvuillam">Nicolas Vuillamy</a></p>
+</blockquote>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/">
+    <link rel="shortcut icon" href="img/favicon.ico">
+
+    
+    <title>Home - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="css/base.min.css" rel="stylesheet">
+    <link href="css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body class="homepage" >
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href=".">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/index.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#secure-git-guide">🚨 Secure Git Guide 🚨</a></li>
+            <li class="second-level"><a href="#suggestions-petitions-on-articles-contributions-etc">Suggestions, petitions on articles, contributions, etc 🤓🤡👍</a></li>
+                
+            <li class="second-level"><a href="#articles">Articles 🔑🔒</a></li>
+                
+            <li class="second-level"><a href="#resources">Resources</a></li>
+                
+            <li class="second-level"><a href="#suggestions-and-contact">Suggestions and Contact</a></li>
+                
+            <li class="second-level"><a href="#credits">👑👑👑 Credits 👑👑👑</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="secure-git-guide">🚨 Secure Git Guide 🚨</h1>
+<p><img alt="Index header" src="media/HEADER/SGG-IndexHeader-1600x500.jpg" /></p>
+<p><a href="https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml"><img alt="MegaLinter" src="https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml/badge.svg" /></a>
+<img alt="Open Source" src="https://badgen.net/badge/Open%20Source/100%25/DA2CE7" />
+<img alt="Cool" src="https://badgen.net/badge/Cool/100%25/FF7F50" /></p>
+<p>Here we attempt to help any developer to use GIT and GitHub more securely.
+Any challenges that we are facing in terms of security will be registered here.
+You will find information on how to use GIT securely in development work.
+This guide is the result of our team actively developing a pure GIT / GitHub infrastructure for repository optimization and automation during which we encountered security challenges.</p>
+<p>This is a website based on a WIP repository where we will be adding new things as we keep developing. The contents takes two forms: articles and lists of resources.</p>
+<p>Topics that are covered among others:</p>
+<ul>
+<li>GPG and how we use it for projects.</li>
+<li>GPG basic and more advanced uses in relation to GIT and GitHub.</li>
+<li>GitHub secrets, tokens, etc.</li>
+<li>GIT vs GitHub differences.</li>
+<li>etc.</li>
+</ul>
+<h2 id="suggestions-petitions-on-articles-contributions-etc">Suggestions, petitions on articles, contributions, etc 🤓🤡👍</h2>
+<p>If you would like to contribute with your experience, have a question or would like to make a correction or suggestion. You are more than welcome.</p>
+<p>We encourage you to tell us. This is a team effort meant to benefit everyone.</p>
+<p>If you would like to do so, please go and open a discussion on the topic, challenge you are facing, improvement we could make etc. <strong>We are all ears</strong>.</p>
+<p>The way we work is simple:</p>
+<ul>
+<li>A new discussion is opened</li>
+<li>We discuss it publicly with you</li>
+<li>If it makes a new addition to the guide we create an issue.</li>
+<li>You can create the new document or extend or amend an existing one</li>
+</ul>
+<p>Here is the link to setting up a new discussion, we look forward to it: <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions">https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions</a>.</p>
+<p>We will be eternally thankful and add you to our credits at the bottom of our index.</p>
+<h2 id="articles">Articles 🔑🔒</h2>
+<ul>
+<li><a href="001_GPG-What-is-GPG/">What is GPG?</a> (<code>gpg</code>)</li>
+<li><a href="002_GPG-Why-we-use-GPG/">Why we use GPG</a> (<code>gpg</code>, <code>github</code>)</li>
+<li><a href="003-GPG-101-How-to-get-your-first-GPG-Keys/">GPG 101 - How to get your first GPG Keys</a> (<code>gpg</code>)</li>
+<li><a href="004_GPG-How-to-use-GPG-with-GIT-and-GitHub/">How to use GPG with GIT and GitHub</a> (<code>gpg</code>,<code>github</code>)</li>
+<li><a href="005_GPG-Best-Practices/">Best Practices</a> (<code>gpg</code>)</li>
+<li><a href="006_GPG-Other-Uses/">Other Uses</a> (<code>gpg</code>)</li>
+<li><a href="008_GPG-How-to-create-a-subkey-for-signing/">How to create a subkey for signing</a> (<code>gpg</code>)</li>
+<li><a href="009_GPG-How-to-use-a-signing-key-independently-from-primary-key/">How to use a signing key independently from the primary key</a> (<code>gpg</code>)</li>
+<li><a href="010_GPG-Git-commits-partially-verified/">Git commits partially verified</a> (<code>gpg</code>, <code>github</code>)</li>
+<li><a href="011_How-to-remove-commits-by-commit-message/">How to remove commits by their commit message</a> (<code>github</code>)</li>
+<li><a href="012_How-to-import-the-dependabot-gpg-public-key/">How to import the dependabot GPG public key</a> (<code>gpg</code>, <code>github</code>)</li>
+<li><a href="013_How-github-actions-can-get-access-to-secrets/">How GitHub Actions can get access to secrets</a> (<code>github</code>)</li>
+<li><a href="014_Sharing-GitHub-secrets-with-third-party-actions/">Sharing GitHub secrets with third-party actions</a> (<code>github</code>, <code>gh-actions</code>)</li>
+<li><a href="015_How-to-use-Git-as-a-database/">How to use Git as a database</a> (<code>git</code>)</li>
+</ul>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="007_Curated-List-of-Resources/">Curated List of Resources</a> (<code>gpg</code>, <code>github</code>)</li>
+</ul>
+<h2 id="suggestions-and-contact">Suggestions and Contact</h2>
+<p>If you would like to contact us or make any suggestions or comments please do so via:</p>
+<p>A new issue in our GitHub repository: <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/issues">https://github.com/Nautilus-Cyberneering/secure-git-guide/issues</a></p>
+<p>or</p>
+<p>Email: <a href="mailto:info@nautiluscyberneering.de">info@nautilus-cyberneering.de</a></p>
+<h2 id="credits">👑👑👑 Credits 👑👑👑</h2>
+<p>Thank you to all the contributors from our team at Nautilus Cyberneering!!!</p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "."</script>
+    
+    <script src="js/base.js"></script>
+    <script src="search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>
+
+<!--
+MkDocs version : 1.4.1
+Build Date UTC : 2022-10-30 10:58:11.934097+00:00
+-->

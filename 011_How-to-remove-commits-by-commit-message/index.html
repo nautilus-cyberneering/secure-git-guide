@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/011_How-to-remove-commits-by-commit-message/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>Git - How to remove commits by their commit message - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/011_How-to-remove-commits-by-commit-message.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#git-how-to-remove-commits-by-their-commit-message">Git - How to remove commits by their commit message</a></li>
+            <li class="second-level"><a href="#install-reposurgeon">Install reposurgeon</a></li>
+                
+            <li class="second-level"><a href="#links">Links</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="git-how-to-remove-commits-by-their-commit-message">Git - How to remove commits by their commit message</h1>
+<p><img alt="HEADER IMAGE" src="../media/HEADER/GitHub-Repo-SecureGitGuide-ART-011.jpg" /></p>
+<p>Recently we had to remove a large number of commits from our repository. We have implemented a job queue as a GitHub Action. The queue is implemented using empty Git commits to store the jobs information. So you do not need external services. We call it <a href="https://github.com/Nautilus-Cyberneering/git-queue">Git-Queue</a>.</p>
+<p>Since we were still using a beta version we decided to make some changes that broke compatibility with the old version.
+But we already had two demo repositories using the old version. In order to upgrade to the new version we have to remove thousands of commits related to the queue.</p>
+<p>Here you can read the <a href="https://github.com/Nautilus-Cyberneering/library-consumer/issues/28">original issue</a>.</p>
+<p>All the queue commits have a prefix, so the Git history looks like:</p>
+<pre><code class="language-s">* 0830b3c2 - 📝✅: library-update: job.id.1 job.ref.264657b51fbfcf63a0267fa425fd121f5f6781a0 (2022-06-13 10:43:37 +0000) &lt;NautilusCyberneering[bot]&gt;
+* 155125d8 - library aaa synced to commit 13db6c9f7c2f9ca7d8ae57b80cbbcc97a51a28a8 (2022-06-13 10:43:36 +0000) &lt;A committer&gt;
+* af02b696 - update library aaa to commit 13db6c9f7c2f9ca7d8ae57b80cbbcc97a51a28a8 (2022-06-13 10:43:33 +0000) &lt;A committer&gt;
+* 2b110030 - 📝👔: library-update: job.id.1 job.ref.264657b51fbfcf63a0267fa425fd121f5f6781a0 (2022-06-13 10:43:33 +0000) &lt;NautilusCyberneering[bot]&gt;
+* 264657b5 - 📝🈺: library-update: job.id.1 (2022-06-13 11:43:00 +0100) &lt;NautilusCyberneering[bot]&gt;
+</code></pre>
+<p>We wanted to remove all commits with the prefix <code>📝</code> and also a different prefix we were using before that.</p>
+<p>After the first research we found a Stackoverflow question:</p>
+<p><a href="https://stackoverflow.com/questions/4558162/using-git-filter-branch-to-remove-commits-by-their-commit-message/9543606#9543606">Using git filter-branch to remove commits by their commit message</a></p>
+<p>There are a couple of solutions but both of them required to write a little bit of shell script.</p>
+<p>One of them uses <code>git filter-branch</code> but it seems that solution squashes the commits. That should not be a problem is our case because all the commits we wanted to delete are supposed to be empty. And we do not want to delete the commit changes.</p>
+<p>The other solution uses <code>git rebase</code> an a custom shell script to filter commits and mark them to "drop".</p>
+<p>Although those solutions were perfectly fine we decided to use <a href="http://www.catb.org/~esr/reposurgeon/">reposurgeon</a> which is a more powerful solution.</p>
+<h2 id="install-reposurgeon">Install reposurgeon</h2>
+<p>If you are using Ubuntu I should be only:</p>
+<pre><code class="language-s">sudo apt-get install reposurgeon
+</code></pre>
+<p>Reposurgeon has two modes: interactive and non-interactive. If you execute reposurgeon without any argument you could see something like:</p>
+<pre><code class="language-s">$ reposurgeon
+reposurgeon% help
+6. The Command Interpreter                 
+  1. Command syntax                        syntax*
+  2. Finding your way around               help, history, shell, quit
+  3. Regular Expressions                   regexp*
+  4. Selection syntax                      selection*, functions*
+  5. Redirection and shell-like features   redirection*
+7. Import and Export                       
+  1. Reading and writing repositories      read, write
+  2. Repository type preference            prefer, sourcetype
+  3. Rebuilds in place                     rebuild
+  5. File preservation                     preserve, unpreserve
+  6. Incorporating release tarballs        incorporate
+  7. The repository list                   choose, drop, rename
+8. Information and reports                 
+  1. Reports on the DAG                    list, index, names, stamp, tags, inspect, graph, lint, when
+  2. Statistics                            stats, count, sizes
+  3. Examining tree states                 manifest, checkout, diff
+9. Surgical Operations                     
+  1. Commit deletion                       squash, delete
+  2. Commit mutation                       merge, unmerge, reparent, split, add, remove, tagify, reorder
+  3. Branches                              branch, branchlift, debranch
+  4. Tags, resets, and blobs               tag, reset, blob, dedup
+  5. Repository splitting and merging      divide, expunge, unite, graft
+  6. Metadata editing                      msgout, msgin, setfield, attribution, append, gitify, filter
+  7. Path reports and modifications        path, setperm
+  8. Timequakes and time offsets           timequake, timeoffset
+  9. Miscellanea                           renumber, transcode
+10. Artifact handling                      
+  1. Attributions                          authors
+  2. Ignore patterns                       ignores
+  3. Reference lifting                     references, legacy
+  4. Changelogs                            changelogs
+  5. Clique coalescence                    coalesce
+11. Control Options                        options*, set, clear
+12. Scripting and debugging support        
+  1. Variables, macros, and scripts        assign, unassign, define, do, undefine, script, print
+  2. Housekeeping                          gc
+  3. Diagnostics                           log, logfile
+  4. Debugging                             resolve, version, hash, sizeof, strip
+  5. Profiling                             elapsed, timing, readlimit, memory, profile, exit
+Starred topics are not commands.           
+reposurgeon%  
+</code></pre>
+<p>You can also create your own script and execute is later. The simplest think you can do is:</p>
+<pre><code class="language-s">reposurgeon &quot;read .&quot; lint
+```s
+
+That command will execute to reposurgeon commands:
+
+1. `read .`: it reads the current folder into memory. The current folder must be a repository.
+2. `lint`: it checks the repository for errors.
+
+You can also enter is the interactive mode and execute both commands manually.
+
+Reposurgeon is a very big tool with a lot of options. You should read the basic documentation to understand how it works. Basically it imports any kind or repo and creates an internal representation of the repo.
+
+The you can execute some commands to change that representation and finally you can export again the internal representation into a different repo. One of the common tasks is used for is converting from different repositories formats. For example from [SNV](https://subversion.apache.org/) to [Git](https://git-scm.com/).
+
+We are going to explain only a use case here: how to remove commits that start with a given prefix.
+
+## Removing commits that start with a given prefix
+
+Let's first create an empty repo:
+
+```s
+mkdir /tmp/remove-commits-example
+cd /tmp/remove-commits-example
+git init
+</code></pre>
+<p>Now we can add some commits. In order to simplify the example the commits we want to delete start with the prefix <code>drop</code>.</p>
+<pre><code class="language-s">echo &quot;hello world!&quot; &gt; README.md
+git add .
+git commit -m &quot;add README&quot;
+git commit --allow-empty -m &quot;drop: empty commit&quot;
+</code></pre>
+<p>After executing those command we will have two commits:</p>
+<pre><code class="language-s">* 9f606d6 - (HEAD -&gt; main) drop: empty commit (2022-06-13 15:08:01 +0100) &lt;Jose Celano&gt;
+* 7533b82 - add README (2022-06-13 15:06:27 +0100) &lt;Jose Celano&gt;
+</code></pre>
+<p>Now we want to remove the commit starting with <code>drop</code>.</p>
+<p>We can create a new file called: <code>remove-commits.rs</code> with this content:</p>
+<pre><code class="language-bash"># Load the project into main memory
+read /tmp/remove-commits-example
+
+# Commit deletion
+/drop/c delete
+
+# We want to write a Git repository
+prefer git
+
+# Do it
+rebuild /tmp/new-remove-commits-example
+</code></pre>
+<p>Then you can run the script with:</p>
+<pre><code class="language-s">reposurgeon &quot;script remove-commits.rs&quot;
+</code></pre>
+<p>All the lines are self-explaining except maybe for the commit deletion one: <code>/drop/c delete</code>.</p>
+<p>The deletion command format is: <code>{SELECTION} delete</code> where <a href="http://www.catb.org/~esr/reposurgeon/repository-editing.html#selections">SELECTION</a> defines what you want to delete. That is very common for reposurgeon commands. The selection argument allows you to define which internal objects you want to act on. There are different types of selections. One of them  it a "text search" which is a regular expression.</p>
+<blockquote>
+<p>A text search normally matches against the comment fields of commits and annotated tags, or against their author/committer names, or against the names of tags; also the text of passthrough objects.</p>
+</blockquote>
+<p>In our case the selection <code>/drop/</code> means that we want to search for all objects containing the word <code>drop</code>.</p>
+<p>Since we allow want to delete commits, we can add what reposurgeon calls a "qualifier letter". The final command contains a <code>c</code> character after the regular expression: <code>/drop/c</code>. That changes the the scope of the search to only the comment text of commit or tag.</p>
+<p>After executing our script you can go to the newly generated repo and execute a <code>git log</code> command. You will see the commit starting with <code>drop</code> that was removed:</p>
+<pre><code class="language-s">cd new-remove-commits-example/
+* 3d7da50 - (HEAD -&gt; main) add README (2022-06-13 15:06:27 +0100) &lt;Jose Celano&gt;
+</code></pre>
+<p>You can also notice that hte commit hash has for the remaining commit changed from <code>7533b82</code> to <code>3d7da50</code>. That means you have to force push the new repo version to the remote repo.</p>
+<p>Another side effect you might have is losing the commit signature.</p>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="http://www.catb.org/~esr/reposurgeon/">reposurgeon</a></li>
+<li><a href="http://www.catb.org/~esr/reposurgeon/repository-editing.html#deletion">reposurgeon - commit deletion</a></li>
+</ul>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

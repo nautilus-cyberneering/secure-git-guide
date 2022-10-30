@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/015_How-to-use-Git-as-a-database/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>Using Git as a key-value database - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/015_How-to-use-Git-as-a-database.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#using-git-as-a-key-value-database">Using Git as a key-value database</a></li>
+            <li class="second-level"><a href="#where-to-store-things">Where to store things?</a></li>
+                
+            <li class="second-level"><a href="#using-git-objects">Using Git Objects</a></li>
+                
+            <li class="second-level"><a href="#using-git-references">Using Git References</a></li>
+                
+            <li class="second-level"><a href="#store-only-the-latest-state">Store only the latest state</a></li>
+                
+            <li class="second-level"><a href="#store-state-change-history">Store state change history</a></li>
+                
+            <li class="second-level"><a href="#how-to-solve-race-conditions">How to solve race conditions</a></li>
+                
+                <li class="third-level"><a href="#optimistic-concurrency-control">Optimistic concurrency control</a></li>
+                <li class="third-level"><a href="#how-to-design-your-unit-of-work">How to design your unit of work</a></li>
+                <li class="third-level"><a href="#atomic-git-push">Atomic Git push</a></li>
+            <li class="second-level"><a href="#github-git-database">GitHub Git database</a></li>
+                
+            <li class="second-level"><a href="#links">Links</a></li>
+                
+                <li class="third-level"><a href="#projects-using-git-objects-and-references-to-store-data">Projects using Git objects and references to store data</a></li>
+                <li class="third-level"><a href="#talks">Talks</a></li>
+                <li class="third-level"><a href="#articles">Articles</a></li>
+                <li class="third-level"><a href="#books">Books</a></li>
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="using-git-as-a-key-value-database">Using Git as a key-value database</h1>
+<p>Obviously you can store whatever you want in a Git repository but in this article we will see how to use the Git internal data structures to store and retrieve data.</p>
+<ul>
+<li><a href="#where-to-store-things">Where to store things</a></li>
+<li><a href="#using-git-objects">Using Git Objects</a></li>
+<li><a href="#using-git-references">Using Git References</a></li>
+<li><a href="#store-only-the-latest-state">Store only the latest state</a></li>
+<li><a href="#store-state-change-history">Store state change history</a></li>
+<li><a href="#how-to-solve-race-conditions">How to solve race conditions</a></li>
+<li><a href="#optimistic-concurrency-control">Optimistic concurrency control</a></li>
+<li><a href="#atomic-git-push">Atomic Git push</a></li>
+<li><a href="#github-git-database">GitHub Git database</a></li>
+<li><a href="#links">Links</a></li>
+<li><a href="#projects-using-git-objects-and-references-to-store-data">Projects using Git objects and references to store data</a></li>
+<li><a href="#talks">Talks</a></li>
+<li><a href="#articles">Articles</a></li>
+<li><a href="#books">Books</a></li>
+</ul>
+<h2 id="where-to-store-things">Where to store things?</h2>
+<p>With Git you can store data in two different ways:</p>
+<ul>
+<li><a href="https://git-scm.com/book/en/v2/Git-Internals-Git-Objects">Git objects</a></li>
+<li><a href="https://git-scm.com/book/en/v2/Git-Internals-Git-References">References</a></li>
+</ul>
+<p>Those are the two ways Git stores data internally.</p>
+<h2 id="using-git-objects">Using Git Objects</h2>
+<p>Git internally uses a key-value database with only 4 <a href="https://git-scm.com/book/en/v2/Git-Internals-Git-Objects">types of objects</a>: <code>blobs</code>, <code>trees</code>, <code>commits</code> and <code>annotated tags</code>.</p>
+<p>Each object is stored in the database and the way to reference the object is by using its <a href="https://en.wikipedia.org/wiki/SHA-1">sha1</a> (a checksum of the content).</p>
+<p>For example, you can insert a new object in the database with:</p>
+<pre><code class="language-s">cd /tmp
+mkdir test
+cd test
+git init
+echo 'test content' | git hash-object -w --stdin
+d670460b4b4aece5915caf5c68d12f560a9fe3e4
+</code></pre>
+<p>The last command output is the sha1 of the new object. You can get the object content back using that sha1:</p>
+<pre><code class="language-s">git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4
+</code></pre>
+<p>This database is immutable. You can only add new content.</p>
+<p>If you are curious where Git stores those objects you can run this command:</p>
+<!-- spell-checker: disable -->
+
+<pre><code class="language-s">$ tree .git/
+.git/
+├── branches
+├── config
+├── description
+├── HEAD
+├── hooks
+│   ├── applypatch-msg.sample
+│   ├── commit-msg.sample
+│   ├── fsmonitor-watchman.sample
+│   ├── post-update.sample
+│   ├── pre-applypatch.sample
+│   ├── pre-commit.sample
+│   ├── pre-merge-commit.sample
+│   ├── prepare-commit-msg.sample
+│   ├── pre-push.sample
+│   ├── pre-rebase.sample
+│   ├── pre-receive.sample
+│   ├── push-to-checkout.sample
+│   └── update.sample
+├── info
+│   └── exclude
+├── objects
+│   ├── d6
+│   │   └── 70460b4b4aece5915caf5c68d12f560a9fe3e4
+│   ├── info
+│   └── pack
+└── refs
+    ├── heads
+    └── tags
+
+10 directories, 18 files
+</code></pre>
+<!-- spell-checker: enable -->
+
+<p>You can see the file <code>.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4</code>. There it is where Git stores the object.</p>
+<h2 id="using-git-references">Using Git References</h2>
+<p>Git has a directory <code>.git/refs</code> which contains files that are the <code>references</code>. Each file contains a sha1 of a database object.</p>
+<p>That means references are lia alias for objects. They allow you to reference objects in the database with a more readable name.</p>
+<p>If you want to get the content from the previous example but do not want to use the sha1, you could create a reference like this:</p>
+<pre><code class="language-s">git update-ref refs/my-objects/object-1 d670460b4b4aece5915caf5c68d12f560a9fe3e4
+</code></pre>
+<p>The reference is a pointer or alias for the object hash you have inserted in the database before. And now you can use the reference to get the content:</p>
+<pre><code class="language-s">$ git cat-file -p refs/my-objects/object-1
+test content
+</code></pre>
+<blockquote>
+<p>NOTICE: we are using a custom reference name. You can use any name and path you want.</p>
+</blockquote>
+<p>This database is a mutable database. You can change references to point to different Git objects.</p>
+<p>You can create new references in any fork of the repository and push them to any remote repository.</p>
+<p>There are some special references handled by Git:</p>
+<pre><code class="language-s">$ tree -al .git/refs/
+.git/refs/
+├── heads
+├── my-objects
+│   └── object-1
+└── tags
+
+3 directories, 1 file
+</code></pre>
+<p>Branches consist only on references pointing to the latest <code>commit</code> object hash in a sequence of commits. When you run a <code>git push</code> command Git tries to update a reference in a remote repository.</p>
+<p>Git provides only those basic low-level databases to store things: <code>objects</code> and <code>references</code>. You can use them in different ways. We have seen at least two different models:</p>
+<ol>
+<li>Store only the latest state.</li>
+<li>Store state change history (commits).</li>
+</ol>
+<h2 id="store-only-the-latest-state">Store only the latest state</h2>
+<p>You can store your data inside <code>blob</code> objects. When you want to update the version of your object you can store a new object. You can use a reference to retrieve the <code>blob</code> object. You also need to prevent the <a href="https://git-scm.com/docs/git-gc">Git Garbage Collector</a> from removing the object. If the <code>blob</code> object is not referenced anywhere it could be deleted.</p>
+<p>Thi diagram shows how to different processes can write objects:</p>
+<p><img alt="image" src="../media/015/store-only-the-latest-state.png" /></p>
+<p>Pros:</p>
+<ul>
+<li>It is very simple. You only need to use two low level Git commits to store and retrieve your data and the very well-known porcelain commands to move data between repositories: <code>pull</code> and <code>push</code>.</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>You cannot <code>checkout</code> the reference because it does not point to a commit.</li>
+</ul>
+<pre><code class="language-s">$ git checkout refs/my-objects/object-1
+fatal: reference is not a tree: refs/my-objects/object-1
+</code></pre>
+<ul>
+<li>You cannot follow changes on the object because each new object version is not linked to the previous one. It is like a standard database. If you want to keep a history of your changes you can do it by yourself or use the next model.</li>
+<li>The model generates a lot of references since we need a reference for each object.</li>
+</ul>
+<h2 id="store-state-change-history">Store state change history</h2>
+<p>The previous solution allows you to store objects like a key-value database. But you can take full advantage of Git by using the other available objects. When you update a <code>blob</code> object you could create a commit.</p>
+<pre><code class="language-s">cd /tmp
+mkdir test
+cd test
+git init
+git checkout --orphan &quot;my-objects-object-1&quot;
+echo &quot;test content&quot; &gt; object-1.txt
+git add .
+git commit --no-gpg-sign -m &quot;add object-1.txt&quot;
+</code></pre>
+<p>You can get the object with:</p>
+<pre><code class="language-s">git checkout my-objects-object-1 &amp;&amp; cat object-1.txt 
+</code></pre>
+<p>But actually the object value is accessible directly just like an standard file. All you need to do is <code>checkout</code> the reference (the branch) we are using to store the object.</p>
+<pre><code class="language-s">git checkout my-objects-object-1 &amp;&amp; cat object-1.txt
+</code></pre>
+<pre><code class="language-s">$ tree -al .git/refs/
+.git/refs/
+├── heads
+│   └── my-objects-object-1
+└── tags
+</code></pre>
+<p><img alt="image" src="../media/015/store-state-change-history.png" /></p>
+<p>Pros:</p>
+<ul>
+<li>You can add metadata for every database operation in the commit message.</li>
+<li>You can easily get the data using the Git Porcelain commands.</li>
+<li>You have the history of changes for your objects.</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>It is more complex than the previous solution.</li>
+<li>It generates a lot of references too. One per object.</li>
+</ul>
+<p>This model uses an orphan branch for each object. An "orphan" branch is a branch that is not connected to any other branch. That means the first commit does not have any ancestors.</p>
+<h2 id="how-to-solve-race-conditions">How to solve race conditions</h2>
+<p>We have seen two possible models to use Git to store your data as a key-value database. But does this database  implementation offer you a way to handle race conditions?</p>
+<p>At some point, you are going to have two processes reading the same object and trying to update it at the same time. One of them is going to overwrite a previous value.</p>
+<p>We can create an example where we have a “table” with counters.</p>
+<p>We insert the first object with a counter starting at 0.</p>
+<pre><code class="language-s">cd /tmp
+mkdir my-counters
+cd my-counters/
+git init
+git checkout -b my-counters-counter-1
+echo &quot;0&quot; &gt; counter-1.txt
+git add .
+git commit --no-gpg-sign -m &quot;initialize counter-1&quot;
+cat counter-1.txt
+</code></pre>
+<p>An independent processes could checkout the repository and increment the counter. After cloning the repository you have an old version of the data because other processes could have cloned and updated the counter.</p>
+<p><img alt="image" src="../media/015/race-conditions.png" /></p>
+<p>Git is a decentralized data structure and the only way to reconciliate things is by using <code>pull</code> and <code>push</code> commands. Git will tell you when you are trying to merge data with conflicts.</p>
+<h3 id="optimistic-concurrency-control">Optimistic concurrency control</h3>
+<p>We normally have two options to fix that problem with normal databases, you can either lock the record when you want to modify it (pessimistic locking) or try to modify it always and make the update fail if the record has changed (optimistic locking).</p>
+<p>Git only allows us to use the <a href="https://en.wikipedia.org/wiki/Optimistic_concurrency_control">optimistic approach</a>. When you try to “push” your object version by updating the reference in the origin repo you will get an error if the reference (branch) was already changed.</p>
+<p><img alt="image" src="../media/015/using-git-push-conflicts-to-implement-optimistic-concurrency-control.png" /></p>
+<p>We can reproduce the conflict in our previous example. We are going to <code>clone</code> the repository twice in two different folders.</p>
+<pre><code class="language-s">cd /tmp
+git clone /tmp/my-counters my-counters-process-1
+cd /tmp/my-counters-process-1/
+git checkout my-counters-counter-1
+cat counter-1.txt
+</code></pre>
+<pre><code class="language-s">cd /tmp
+git clone /tmp/my-counters my-counters-process-2
+cd /tmp/my-counters-process-2/
+git checkout my-counters-counter-1
+cat counter-1.txt
+</code></pre>
+<p>The last output line should show the value <code>0</code> for the <code>counter-1</code>.</p>
+<p>Now we can increment the counter with the first process and <code>push</code> the new value.</p>
+<pre><code class="language-s">cd /tmp/my-counters-process-1
+git checkout my-counters-counter-1
+echo &quot;1&quot; &gt; counter-1.txt 
+git add .
+git commit  --no-gpg-sign -m &quot;increment counter-1 to 1&quot;
+echo &quot;2&quot; &gt; counter-1.txt 
+git add .
+git commit  --no-gpg-sign -m &quot;increment counter-1 to 2&quot;
+cat counter-1.txt
+</code></pre>
+<p>If you try to push the counter you are going to have this error:</p>
+<pre><code class="language-s">git push origin
+…
+ ! [remote rejected] counter-1 -&gt; counter-1 (branch is currently checked out)
+error: failed to push some refs to '/tmp/my-counters'
+</code></pre>
+<p>That is because you are on the same branch in the origin repository. You only need to checkout a different branch in the origin repo.</p>
+<pre><code class="language-s">cd /tmp/my-counters
+git checkout --orphan another-branch
+</code></pre>
+<p>Got bak to the <code>process-1</code> folder and <code>push</code> the new value.</p>
+<pre><code class="language-s">cd /tmp/my-counters-process-1/
+git push origin
+</code></pre>
+<p>Now, the output should be like:</p>
+<pre><code class="language-s">Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (6/6), 482 bytes | 482.00 KiB/s, done.
+Total 6 (delta 0), reused 0 (delta 0), pack-reused 0
+To /tmp/my-counters
+   7614015..ba3cbfb  my-counters-counter-1 -&gt; my-counters-counter-1
+</code></pre>
+<p>You have updated the <code>origin</code> (our database) with a new value. Now, if you try to <code>push</code> changes from the <code>process-2</code>:</p>
+<pre><code class="language-s">cd /tmp/my-counters-process-2
+git checkout my-counters-counter-1
+echo &quot;1&quot; &gt; counter-1.txt 
+git add .
+git commit  --no-gpg-sign -m &quot;increment counter-1 to 1&quot;
+cat counter-1.txt
+git push origin
+</code></pre>
+<p>You will get this error:</p>
+<pre><code class="language-s">To /tmp/my-counters
+ ! [rejected]        my-counters-counter-1 -&gt; my-counters-counter-1 (fetch first)
+error: failed to push some refs to '/tmp/my-counters'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+</code></pre>
+<p>You cannot update the reference because the previous commits created by <code>process-1</code> would be lost.</p>
+<p>Git does not allow you to update the object if someone else has already changed it. So basically if you use Git to store your objects the only mechanism to avoid race conditions is optimistic locking.</p>
+<p>This way of using Git is like having an SQL table where you have version numbers for recording updates by default. That means every time you read a record you get the version number. When you update the record you check that the version number is still the same. The only difference compared with the normal SQL optimistic lock approach is that you always store the new version of the object, but you do not update the reference (pointer) to it. So you will continue retrieving the previous version.</p>
+<p>But what would happens if you try to push a reference with <code>git push</code> outside of the branch folder? Meaning using a custom reference like the one we have used before.</p>
+<p>The good news is that Git:</p>
+<ul>
+<li>REJECTS updating any remote reference that refers to an object not in the local git object store.</li>
+<li>REJECTS updating any remote reference that refers to a non-commit-object.</li>
+<li>REJECTS updating any remote reference that changes a commit-object into referring a non commit-object.</li>
+<li>REJECTS updating any remote reference that isn't a direct parent of the new-commit-object. (ie. non-fast-forward push).</li>
+</ul>
+<p>It only accepts fast forward <code>commit</code> reference updates.</p>
+<h3 id="how-to-design-your-unit-of-work">How to design your unit of work</h3>
+<p>Since you only can control concurrency at the object level (references) you have to make sure that you <a href="https://www.dddcommunity.org/library/vernon_2011/">design your aggregates</a> in a way that each aggregate is a different reference (or branch if you use the second model).</p>
+<p><strong>What does that mean?</strong></p>
+<p>In the same example, you can have strict domain rules between counters. For example:</p>
+<ul>
+<li>You cannot have more than a certain number of counters.</li>
+<li>All counters cannot count more than 100.</li>
+</ul>
+<p>In those cases, you should have to define an object like a "pool of counters" and store all the values in the same object (branch).</p>
+<p>If we do not have any invariant between objects you can store each object in a different orphan branch. That way you can reduce conflicts and have a better performance. On the contrary, if you have some invariants with more than one object then you have to store the whole aggregate in the same branch, so you make sure we do not have any transactional inconsistencies. You could decide the storage method depending on the invariants declared in application.</p>
+<p>I recommend reading <a href="https://www.dddcommunity.org/library/vernon_2011/">these articles</a> to know the trade-offs of aggregate design.</p>
+<h3 id="atomic-git-push">Atomic Git push</h3>
+<p>Sometimes you will need to update the object but also to create other commits in others branches atomically. For example, if you want to update two objects at the same time. You could want to update both of them or neither of them. That is to say, you could want to have transactions.</p>
+<p>Fortunately, Git has a <code>push</code> option “--atomic” that does exactly that: "Either all refs are updated, or on error, no refs are updated”.</p>
+<p>So you could do something like:</p>
+<pre><code class="language-s">git push --atomic origin refs/heads/my-counters-counter-1 refs/heads/my-counters-counter-2 
+</code></pre>
+<p>More info about Atomic pushes:</p>
+<ul>
+<li><a href="https://github.blog/2015-04-30-git-2-4-atomic-pushes-push-to-deploy-and-more/">Git 2.4 — atomic pushes, push to deploy, and more</a></li>
+<li><a href="https://git-scm.com/docs/git-push#Documentation/git-push.txt---no-atomic">Git push command with --atomic option</a></li>
+</ul>
+<h2 id="github-git-database">GitHub Git database</h2>
+<p><a href="https://docs.github.com/en/rest/git">GitHub API</a> allows you to access Git objects directly.</p>
+<h2 id="links">Links</h2>
+<h3 id="projects-using-git-objects-and-references-to-store-data">Projects using Git objects and references to store data</h3>
+<ul>
+<li><a href="https://graphite.dev/">https://graphite.dev/</a></li>
+<li><a href="https://dvc.org/doc/user-guide/experiment-management/experiments-overview#how-does-dvc-track-experiments">https://dvc.org/doc/user-guide/experiment-management/experiments-overview#how-does-dvc-track-experiments</a></li>
+</ul>
+<h3 id="talks">Talks</h3>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=nPPlyjMlQ34">Using Git as a NoSql Database by Kenneth Truyers</a></li>
+<li><a href="https://www.youtube.com/watch?v=fjN4c4RWiV0">Git the NoSQL Database by Brandon Keepers</a></li>
+</ul>
+<h3 id="articles">Articles</h3>
+<ul>
+<li><a href="https://towardsdatascience.com/how-git-truly-works-cd9c375966f6">How Git truly works</a></li>
+<li><a href="https://medium.com/@gohberg/the-biggest-misconception-about-git-b2f87d97ed52">The Biggest Misconception About Git</a></li>
+</ul>
+<h3 id="books">Books</h3>
+<ul>
+<li><a href="https://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project">Git Pro - Chapter 5.3 - Maintaining a Project - Section Tagging Your Releases</a></li>
+</ul>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

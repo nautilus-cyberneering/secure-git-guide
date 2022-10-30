@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/010_GPG-Git-commits-partially-verified/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>GPG - Git commits partially verified - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/010_GPG-Git-commits-partially-verified.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#gpg-git-commits-partially-verified">GPG - Git commits partially verified</a></li>
+            <li class="second-level"><a href="#basic-git-concepts-related-to-commit-signatures">Basic Git concepts related to commit signatures</a></li>
+                
+                <li class="third-level"><a href="#committer-vs-author">Committer vs author</a></li>
+                <li class="third-level"><a href="#commit-signature-in-git">Commit signature in Git</a></li>
+                <li class="third-level"><a href="#commit-signature-on-github">Commit signature on GitHub</a></li>
+            <li class="second-level"><a href="#git-commit-with-multiple-gpg-signatures">Git commit with multiple GPG signatures</a></li>
+                
+            <li class="second-level"><a href="#git-merge-rebase-and-gpg-signature">Git merge, rebase and GPG signature</a></li>
+                
+            <li class="second-level"><a href="#how-to-keep-the-chain-of-trust">How to keep the chain of trust</a></li>
+                
+            <li class="second-level"><a href="#conclusion">Conclusion</a></li>
+                
+            <li class="second-level"><a href="#links">Links</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="gpg-git-commits-partially-verified">GPG - Git commits partially verified</h1>
+<p><img alt="HEADER IMAGE" src="../media/HEADER/GitHub-Repo-SecureGitGuide-ART-010.jpg" /></p>
+<p>On <a href="https://github.com/">GitHub</a>, you can <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits">enable vigilant mode for commit signature verification</a>. That means that GitHub will verify the signature of your commits and it will show a message like this:</p>
+<p><img alt="Commit with verified signature" src="../media/010/commit-with-verified-signature-on-github.png" /></p>
+<p>It will verify not only the commits were you are the committer but also commits where you are the author.</p>
+<p>That is the straightforward case. However, there are some cases where you can get unexpected behaviour. We will describe some corner cases regarding signing git commits, but before that, we have to explain some basic Git concepts related to commit signatures.</p>
+<h2 id="basic-git-concepts-related-to-commit-signatures">Basic Git concepts related to commit signatures</h2>
+<h3 id="committer-vs-author">Committer vs author</h3>
+<p>The "committer" is the person who executes the commit command <code>git commit</code>. Git gets the committer name and email from the Git configuration, and it is usually the global configuration.</p>
+<pre><code class="language-s">$ git config -l | grep user
+user.name=Jose Celano
+user.email=josecelano@gmail.com
+user.signingkey=58508C7950C7B7A2
+</code></pre>
+<p>If you do not specify an author, Git assumes that the author is the same as the committer. You can also override the committer and the author using environment variables:</p>
+<pre><code class="language-text">GIT_AUTHOR_NAME
+GIT_AUTHOR_EMAIL
+GIT_COMMITTER_NAME
+GIT_COMMITTER_EMAIL
+</code></pre>
+<p>For the author you have a command option too (<code>git commit -m "..." --author="Your Name &lt;your@email.com&gt;"</code>).</p>
+<h3 id="commit-signature-in-git">Commit signature in Git</h3>
+<p>Git also allows you to sign a commit with a GPG key.</p>
+<p>From the <a href="https://git-scm.com/docs/signature-format">Git official documentation about GPG signature</a>:</p>
+<blockquote>
+<p><em>The command which is about to create an object (commit) determines a payload from that, calls gpg to obtain a detached signature for the payload (gpg -bsa) and embeds the signature into the object or transaction.</em></p>
+</blockquote>
+<p>You can use any GPG key. Usually the GPG user ID matches the committer info. If you have this configuration in your <code>~/.gitconfig</code> file:</p>
+<pre><code class="language-s">$ cat ~/.gitconfig
+[user]
+  name = A committer
+  email = committer@example.com
+  signingkey = BD98B3F42545FF93EFF55F7F3F39AA1432CA6AD7
+</code></pre>
+<p>You will probably have a GPG key like this:</p>
+<pre><code class="language-s">gpg -k --with-subkey-fingerprint 88966A5B8C01BD04F3DA440427304EDD6079B81C
+pub   rsa4096 2021-11-19 [C]
+      88966A5B8C01BD04F3DA440427304EDD6079B81C
+uid           [ultimate] A committer &lt;committer@example.com&gt;
+sub   rsa4096 2021-11-19 [E]
+      B1D4A2483D1D2A02416BE0775B6BDD35BEDFBF6F
+sub   rsa4096 2021-11-26 [S]
+      BD98B3F42545FF93EFF55F7F3F39AA1432CA6AD7
+</code></pre>
+<p>In Git you can commit using a different committer and author, and also with a GPG key with a different user ID.</p>
+<pre><code class="language-s">GIT_COMMITTER_NAME=&quot;Jose Celano [bot]&quot; \
+GIT_COMMITTER_EMAIL=&quot;bot@josecelano.com&quot; \
+GIT_AUTHOR_NAME=&quot;Jose Celano&quot; \
+GIT_AUTHOR_EMAIL=&quot;josecelano@gmail.com&quot; \
+  git commit --gpg-sign=BD98B3F42545FF93EFF55F7F3F39AA1432CA6AD7 -m &quot;commit message&quot;
+</code></pre>
+<p>This is how the commit looks`:</p>
+<pre><code class="language-s">commit d89b296e9d58cc4281aeead172b170739acc164c (HEAD -&gt; main)
+gpg: Signature made jue 12 may 2022 15:36:29 WEST
+gpg:                using RSA key BD98B3F42545FF93EFF55F7F3F39AA1432CA6AD7
+gpg: Good signature from &quot;A committer &lt;committer@example.com&gt;&quot; [ultimate]
+Author:     Jose Celano &lt;josecelano@gmail.com&gt;
+AuthorDate: Thu May 12 15:36:29 2022 +0100
+Commit:     Jose Celano [bot] &lt;bot@josecelano.com&gt;
+CommitDate: Thu May 12 15:36:29 2022 +0100
+
+    commit message
+
+</code></pre>
+<h3 id="commit-signature-on-github">Commit signature on GitHub</h3>
+<p>That is how Git works, but <a href="https://github.com/">GitHub</a> does not work exactly like Git. On the <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key#generating-a-gpg-key">GitHub Documentation</a> you can read:</p>
+<blockquote>
+<p>Note: <em>When asked to enter your email address, ensure that you enter the verified email address for your GitHub account. To keep your email address private, use your GitHub-provided no-reply email address. For more information, see "Verifying your email address" and "Setting your commit email address."</em></p>
+</blockquote>
+<p>GitHub forces you to a use a GPG key whose user ID matches one of your GitHub account emails, so that when GitHub verified the signature not only verifies that the signature is OK but it also verifies that committer's email and account email match.</p>
+<blockquote>
+<p><em>You should only enable vigilant mode if you sign all of your commits and tags and use an email address that is verified for your account on GitHub as your committer email address.</em></p>
+</blockquote>
+<p>GitHub shows you a simplified version of Git. Because it links the GPG key to the committer. Although is not a Git constraint it is a common practice. <a href="https://docs.gitlab.com/ee/user/project/repository/gpg_signed_commits/">GitLab</a> seems to do exactly the same:</p>
+<blockquote>
+<p><em>For GitLab to consider a commit verified:</em></p>
+<ul>
+<li><em>The committer must have a GPG public/private key pair.</em></li>
+<li><em>The committer’s public key must be uploaded to their GitLab account.</em></li>
+<li><em>One of the email addresses in the GPG public key must match a verified email address used by the committer in GitLab. To keep this address private, use the automatically generated private commit email address GitLab provides in your profile.</em></li>
+<li><em>The committer’s email address must match the verified email address from the GPG key.</em></li>
+</ul>
+</blockquote>
+<p>For the rest of this article we assume that the GPG key fulfills the requirements in the GitLab documentation. We do not know if GitHub has exactly the same restrictions as we have not found documentation about it.</p>
+<h2 id="git-commit-with-multiple-gpg-signatures">Git commit with multiple GPG signatures</h2>
+<p>Git does not allow to add more than one GPG signature to a commit. What Git does is generate the commit object and sign it with GPG. The signature is then added as a <a href="https://git-scm.com/docs/signature-format#_commit_signatures">commit header</a>.</p>
+<p>We have not found a reason why Git does not support multiple signatures. Since Git only relays on the GPG console command, we thought the reason was that GPG did not support it either, but as you can read on this <a href="https://stackoverflow.com/questions/37725969/several-pgp-signatures-for-one-file/37759313#37759313">Stackoverflow answer</a>, there are two ways to add multiple signatures to a file using GPG.</p>
+<p>The first solution is to sign the contents with one key and sign the result again with the following key until you sign it with all the keys.</p>
+<p>The second solution would be using "detached signatures", which means the signature is not included in the signed document. We suppose Git could have used this approach, and <a href="https://grimoire.ca/git/detached-sigs/">this article from Owen Jacobson(</a> describes it in detail. But it is not the case. Although Git uses "detached signatures", the signature is included as a commit header inside the "full" commit object that is used to calculate the commit hash. That means changing the signature changes the commit hash.</p>
+<h2 id="git-merge-rebase-and-gpg-signature">Git merge, rebase and GPG signature</h2>
+<p>So, we know that Git does not allow including the author's signature and the committer's signature. We have the restriction that you can only add one signature to each commit. That means you will permanently lose the author's signature when you commit someone else's code. You could include the author's signature instead of the committer's one but that is not an standard practice. If you want to include the author's signature your can keep the original commit, for example, by using git merge (with a merge commit) to merge branches.</p>
+<p>We will see whether that is important or not, why it is crucial, and how you can deal with this problem. However, before that, we need to understand what happens when a committer specifies a different author and other cases where the author changes automatically.</p>
+<p>When you use the <code>git rebase</code> command with a different committer than the original commits, Git will keep the original author as the author of the newly generated commits.</p>
+<pre><code class="language-s">echo &quot;Initialize repo&quot;
+mkdir /tmp/git-test
+cd /tmp/git-test/
+git init
+echo &quot;Add a file as maintainer&quot;
+touch a.txt
+git add -A
+GIT_COMMITTER_NAME=&quot;maintainer&quot; \
+GIT_COMMITTER_EMAIL=&quot;maintainer@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;maintainer&quot; \
+GIT_AUTHOR_EMAIL=&quot;maintainer@email.com&quot; \
+  git commit --no-gpg-sign -m &quot;add a.txt&quot;
+echo &quot;Add a file as contributor on a topic branch&quot;
+git checkout -b topic-branch
+touch b.txt
+git add -A
+GIT_COMMITTER_NAME=&quot;contributor&quot; \
+GIT_COMMITTER_EMAIL=&quot;contributor@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;contributor&quot; \
+GIT_AUTHOR_EMAIL=&quot;contributor@email.com&quot; \
+  git commit --no-gpg-sign -m &quot;add b.txt&quot;
+git show --pretty=fuller HEAD
+echo &quot;Add another file as maintainer on the main branch&quot;
+git checkout main
+touch c.txt
+git add -A
+GIT_COMMITTER_NAME=&quot;maintainer&quot; \
+GIT_COMMITTER_EMAIL=&quot;maintainer@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;maintainer&quot; \
+GIT_AUTHOR_EMAIL=&quot;maintainer@email.com&quot; \
+  git commit --no-gpg-sign -m &quot;add c.txt&quot;
+echo &quot;Rebase topic-branch as maintainer&quot;
+git checkout topic-branch
+GIT_COMMITTER_NAME=&quot;maintainer&quot; \
+GIT_COMMITTER_EMAIL=&quot;maintainer@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;maintainer&quot; \
+GIT_AUTHOR_EMAIL=&quot;maintainer@email.com&quot; \
+  git rebase main
+git log --pretty=fuller
+</code></pre>
+<p>If you execute the script, you will see the original contributor commit:</p>
+<pre><code class="language-s">commit 148628f7f3f0f0a908ab5889e066eba842f4da66 (HEAD -&gt; topic-branch)
+Author:     contributor &lt;contributor@email.com&gt;
+AuthorDate: Mon May 2 15:43:09 2022 +0100
+Commit:     contributor &lt;contributor@email.com&gt;
+CommitDate: Mon May 2 15:43:09 2022 +0100
+
+    add b.txt
+</code></pre>
+<p>And the commit after the rebase:</p>
+<pre><code class="language-s">commit 71f8feb30f8b02f26ddee67385152e25a774704f (HEAD -&gt; topic-branch)
+Author:     contributor &lt;contributor@email.com&gt;
+AuthorDate: Mon May 2 15:43:09 2022 +0100
+Commit:     maintainer &lt;maintainer@email.com&gt;
+CommitDate: Mon May 2 15:43:09 2022 +0100
+
+    add b.txt
+</code></pre>
+<p>If you merge the <code>topic-branch</code> into the <code>main</code> branch with fast-forward:</p>
+<pre><code class="language-s">git checkout main
+GIT_COMMITTER_NAME=&quot;maintainer&quot; \
+GIT_COMMITTER_EMAIL=&quot;maintainer@email.com&quot; \
+  git merge --ff-only topic-branch
+</code></pre>
+<p>you will have the same commit <code>71f8feb30f8b02f26ddee67385152e25a774704f</code> re-created by the maintainer in the main branch.</p>
+<pre><code class="language-s">git show --pretty=fuller HEAD
+commit 71f8feb30f8b02f26ddee67385152e25a774704f (HEAD -&gt; main, topic-branch)
+Author:     contributor &lt;contributor@email.com&gt;
+AuthorDate: Mon May 2 15:43:09 2022 +0100
+Commit:     maintainer &lt;maintainer@email.com&gt;
+CommitDate: Mon May 2 15:43:09 2022 +0100
+
+    add b.txt
+</code></pre>
+<p>As you can see, Git keeps the author (<code>contributor &lt;contributor@email.com&gt;</code>) of the original commit.</p>
+<p>On the other hand, the maintainer could merge the <code>topic-branch</code> with a merge commit:</p>
+<pre><code class="language-s">echo &quot;Initialize repo&quot;
+mkdir /tmp/git-test
+cd /tmp/git-test/
+git init
+echo &quot;Add a file as maintainer&quot;
+touch a.txt
+git add -A
+GIT_COMMITTER_NAME=&quot;maintainer&quot; \
+GIT_COMMITTER_EMAIL=&quot;maintainer@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;maintainer&quot; \
+GIT_AUTHOR_EMAIL=&quot;maintainer@email.com&quot; \
+  git commit --no-gpg-sign -m &quot;add a.txt&quot;
+echo &quot;Add a file as contributor on a topic branch&quot;
+git checkout -b topic-branch
+touch b.txt
+git add -A
+GIT_COMMITTER_NAME=&quot;contributor&quot; \
+GIT_COMMITTER_EMAIL=&quot;contributor@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;contributor&quot; \
+GIT_AUTHOR_EMAIL=&quot;contributor@email.com&quot; \
+  git commit --no-gpg-sign -m &quot;add b.txt&quot;
+git show --pretty=fuller HEAD
+echo &quot;Merge topic-branch as maintainer&quot;
+git checkout main
+GIT_COMMITTER_NAME=&quot;maintainer&quot; \
+GIT_COMMITTER_EMAIL=&quot;maintainer@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;maintainer&quot; \
+GIT_AUTHOR_EMAIL=&quot;maintainer@email.com&quot; \
+  git merge --no-ff topic-branch
+git log --pretty=fuller
+</code></pre>
+<p>In this case, the contributor commit looks the same as in the previous example before rebasing:</p>
+<pre><code class="language-s">commit ac3b9f8eef024c30e59c01bce4943ad0597fab9c (HEAD -&gt; topic-branch)
+Author:     contributor &lt;contributor@email.com&gt;
+AuthorDate: Mon May 2 15:52:37 2022 +0100
+Commit:     contributor &lt;contributor@email.com&gt;
+CommitDate: Mon May 2 15:52:37 2022 +0100
+
+    add b.txt
+</code></pre>
+<p>And after merging:</p>
+<pre><code class="language-s">commit 1b75bfb9d0b4621560bf2c6158e937ea457bb4e5 (HEAD -&gt; main)
+Merge: 097e6ee ac3b9f8
+Author:     maintainer &lt;maintainer@email.com&gt;
+AuthorDate: Mon May 2 15:52:37 2022 +0100
+Commit:     maintainer &lt;maintainer@email.com&gt;
+CommitDate: Mon May 2 15:52:37 2022 +0100
+
+    Merge branch 'topic-branch'
+
+commit 097e6ee7f0088a54ec22712ce18fd08904d954b8
+Author:     maintainer &lt;maintainer@email.com&gt;
+AuthorDate: Mon May 2 15:52:37 2022 +0100
+Commit:     maintainer &lt;maintainer@email.com&gt;
+CommitDate: Mon May 2 15:52:37 2022 +0100
+
+    add a.txt
+
+commit ac3b9f8eef024c30e59c01bce4943ad0597fab9c (topic-branch)
+Author:     contributor &lt;contributor@email.com&gt;
+AuthorDate: Mon May 2 15:52:37 2022 +0100
+Commit:     contributor &lt;contributor@email.com&gt;
+CommitDate: Mon May 2 15:52:37 2022 +0100
+
+    add b.txt
+</code></pre>
+<p>You still have the original commit <code>ac3b9f8eef024c30e59c01bce4943ad0597fab9c</code> and the new merge commit <code>1b75bfb9d0b4621560bf2c6158e937ea457bb4e5</code>.</p>
+<p>Notice that you have to specify the author again for the git merge commit. Otherwise, the author would be your default committer info.
+For the <code>git merge --ff-only topic-branch</code>, you do not have to specify the author. Git uses the original commit author.</p>
+<blockquote>
+<p>NOTE: we could test what happens when the original commit has a different committer and author. We suppose the author is what is propagated, but we should check it with an example.</p>
+</blockquote>
+<p>If we were using GPG signatures, we would have only the committer signature on each final commit.</p>
+<blockquote>
+<p>NOTE: <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#rebase-and-merge-your-pull-request-commits">GitHub "rebase and merge" button does not work exactly as Git rebase</a>.</p>
+</blockquote>
+<p>On GitHub documentation, you can read:</p>
+<blockquote>
+<p>"The rebase and merge behavior on GitHub deviates slightly from Git rebase. Rebase and merge on GitHub will always update the committer information and create new commit SHAs, whereas Git rebase outside of GitHub does not change the committer information when the rebase happens on top of an ancestor commit. For more information about Git rebase, see git-rebase in the Git documentation."</p>
+</blockquote>
+<p>When it is possible to merge with fast-forward, Git will not change the original committer info. If you rerun the merge example using rebase with fast-forward:</p>
+<pre><code class="language-s">echo &quot;Initialize repo&quot;
+mkdir /tmp/git-test
+cd /tmp/git-test/
+git init
+echo &quot;Add a file as maintainer&quot;
+touch a.txt
+git add -A
+GIT_COMMITTER_NAME=&quot;maintainer&quot; \
+GIT_COMMITTER_EMAIL=&quot;maintainer@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;maintainer&quot; \
+GIT_AUTHOR_EMAIL=&quot;maintainer@email.com&quot; \
+  git commit --no-gpg-sign -m &quot;add a.txt&quot;
+echo &quot;Add a file as contributor on a topic branch&quot;
+git checkout -b topic-branch
+touch b.txt
+git add -A
+GIT_COMMITTER_NAME=&quot;contributor&quot; \
+GIT_COMMITTER_EMAIL=&quot;contributor@email.com&quot; \
+GIT_AUTHOR_NAME=&quot;contributor&quot; \
+GIT_AUTHOR_EMAIL=&quot;contributor@email.com&quot; \
+  git commit --no-gpg-sign -m &quot;add b.txt&quot;
+git show --pretty=fuller HEAD
+echo &quot;Merge topic-branch as maintainer&quot;
+git checkout main
+  git merge --ff-only topic-branch
+git log --pretty=fuller
+</code></pre>
+<p>The original contributor commits should be something like:</p>
+<pre><code class="language-s">commit d81c1a285a1a82fcdd8732ea159a58f66e082e1d (HEAD -&gt; topic-branch)
+Author:     contributor &lt;contributor@email.com&gt;
+AuthorDate: Mon May 2 16:22:28 2022 +0100
+Commit:     contributor &lt;contributor@email.com&gt;
+CommitDate: Mon May 2 16:22:28 2022 +0100
+
+    add b.txt
+</code></pre>
+<p>And you can see the same commit after the merge:</p>
+<pre><code class="language-s">commit d81c1a285a1a82fcdd8732ea159a58f66e082e1d (HEAD -&gt; main, topic-branch)
+Author:     contributor &lt;contributor@email.com&gt;
+AuthorDate: Mon May 2 16:22:28 2022 +0100
+Commit:     contributor &lt;contributor@email.com&gt;
+CommitDate: Mon May 2 16:22:28 2022 +0100
+
+    add b.txt
+
+commit 176fa5d4b50bacc9e608d4cfad5957bd156da775
+Author:     maintainer &lt;maintainer@email.com&gt;
+AuthorDate: Mon May 2 16:22:28 2022 +0100
+Commit:     maintainer &lt;maintainer@email.com&gt;
+CommitDate: Mon May 2 16:22:28 2022 +0100
+
+    add a.txt
+</code></pre>
+<p>That commit keeps the committer and author values. GitHub would override the committer info with the info of the logged-in user. GitHub does something like:</p>
+<pre><code class="language-s">git checkout main
+GIT_COMMITTER_NAME=&quot;maintainer&quot; \
+GIT_COMMITTER_EMAIL=&quot;maintainer@email.com&quot; \
+  git merge --ff-only topic-branch
+</code></pre>
+<p><a href="https://github.blog/2016-09-26-rebase-and-merge-pull-requests/">More info on a GitHub blog post</a>.</p>
+<h2 id="how-to-keep-the-chain-of-trust">How to keep the chain of trust</h2>
+<p>Now we know:</p>
+<ul>
+<li>How Git uses the committer and author information.</li>
+<li>How Git deals with commit signatures.</li>
+<li>How GitHub works slightly different overwriting the committer info when you use the "rebase and merge" on a pull request.</li>
+</ul>
+<p>What happens when we create a new commit?</p>
+<p>When a new commit is created, we need to sign it again with the committer GPG key. That leads to two problems:</p>
+<ol>
+<li>We can lose the commit signature.</li>
+<li>We lose the author's signature.</li>
+</ol>
+<p>Let us start with point 1, having not signed commits.</p>
+<p>If we re-create new commits using rebase, we lose the original author signature, but we can add the maintainer one, as long as we do it in an environment where the GPG private key is available. For example, if you use the "rebase and merge" button provided by the GitHub UI, the new commit will not be signed because GitHub does not have the committer signing key. You can use a console command where the maintainer GPG private key is available.</p>
+<p>That forces you to stop using GitHub UI for merging pull requests if you want all your commits to be signed.</p>
+<p>Regarding point 2, losing the author's signature, we first must consider why we do not want to lose it.</p>
+<p>We can consider the signature a mechanism to review/accept changes. If we consider only the maintainers the final responsible for our code, losing the author's signature is not critical, as long as the maintainers make sure changes come from a trusted source. In this case, we are not breaking the trust. It is just that we trust maintainers, and they check signatures for other contributors they trust. The maintainers should ensure that commits on a pull request are signed by contributors they trust before merging them.</p>
+<p>On the other hand, It would be nice to keep that trust chain transparent so people using a package can check that third-party contributors' changes were accepted without changes.</p>
+<p>If you do not want to lose the author's signature, one obvious solution is to merge only using merge commits.</p>
+<p>It is out of the scope of this article to describe the pros and cons of losing or not losing the author's signature. A fascinating <a href="https://mikegerwitz.com/2012/05/a-git-horror-story-repository-integrity-with-signed-commits#trust-ensure">article by Mike Gerwitz</a> explains the different alternatives in detail.</p>
+<p>When this happens on GitHub, you see this message on the commit status (if you have vigilant mode enabled):</p>
+<p><img alt="Commit with partially verified signature" src="../media/010/commit-with-partially-verified-signature-on-github.png" /></p>
+<p>Maybe losing the author's signature is not an issue from the package user or the maintainers' point of view. However, from the author's point of view, you can not distinguish anymore between your legitimate commits and the fake ones. Someone else could pretend you have collaborated with their project. It is surprisingly easy to do that. You only need to create a commit and override the author with any users on GitHub.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>When you use signed commits:</p>
+<ul>
+<li>Be aware of the Git limitation of one single signature per commit.</li>
+<li>Be also aware of what happens to signatures when you use Git commands like "merge" and "rebase".</li>
+<li>Define your git branching/merging and release strategy according to your web of trust.</li>
+<li>Be prepared to stop using the GitHub UI and define your processes and scripts.</li>
+</ul>
+<h2 id="links">Links</h2>
+<ul>
+<li>
+<p>Article by Mike Gerwitz: <a href="https://mikegerwitz.com/2012/05/a-git-horror-story-repository-integrity-with-signed-commits#trust-ensure">A Git Horror Story: Repository Integrity With Signed Commits</a></p>
+</li>
+<li>
+<p>Article by Owen Jacobson: <a href="https://grimoire.ca/git/detached-sigs/">Notes Towards Detached Signatures in Git</a></p>
+</li>
+<li>
+<p>Stackoverflow: <a href="https://stackoverflow.com/a/37759313/3012842">Several GPG signatures for one file</a></p>
+</li>
+<li>
+<p>Stackoverflow: <a href="https://stackoverflow.com/questions/1962094/what-is-the-sign-off-feature-in-git-for">Git –sign-off feature</a></p>
+</li>
+<li>
+<p>Hacker News: <a href="https://news.ycombinator.com/item?id=19183803">Git-signatures – Multiple PGP signatures for your commits</a></p>
+</li>
+<li>
+<p>Article by Michał Górny: <a href="https://mgorny.pl/articles/attack-on-git-signature-verification.html">Attack on git signature verification via crafting multiple signatures</a></p>
+</li>
+<li>
+<p>Git book: <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">Git Tools - Signing Your Work</a></p>
+</li>
+<li>
+<p>Git docs: <a href="https://git-scm.com/docs/signature-format">Git signature format</a></p>
+</li>
+</ul>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

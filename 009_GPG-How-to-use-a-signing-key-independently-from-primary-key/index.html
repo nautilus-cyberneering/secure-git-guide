@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A collections of articles about Git, GitHub and GPG focused on security">
+    
+    <link rel="canonical" href="https://secure-git.guide/009_GPG-How-to-use-a-signing-key-independently-from-primary-key/">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>GPG - How to use a signing key independently from the primary key - Secure Git Guide</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">Secure Git Guide</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Nautilus-Cyberneering/secure-git-guide/edit/main/docs/009_GPG-How-to-use-a-signing-key-independently-from-primary-key.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#gpg-how-to-use-a-signing-key-independently-from-the-primary-key">GPG - How to use a signing key independently from the primary key</a></li>
+            <li class="second-level"><a href="#how-to-export-only-one-private-subkey-from-a-gpg-key">How to export only one private subkey from a GPG key</a></li>
+                
+            <li class="second-level"><a href="#how-to-change-the-passphrase-for-the-subkey">How to change the passphrase for the subkey</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="gpg-how-to-use-a-signing-key-independently-from-the-primary-key">GPG - How to use a signing key independently from the primary key</h1>
+<p><img alt="HEADER IMAGE" src="../media/HEADER/GitHub-Repo-SecureGitGuide-ART-009.jpg" /></p>
+<p>Creating a subkey only for signing is considered a good practice, instead of using the primary key. If you want to know why you can read this <a href="../008_GPG-How-to-create-a-subkey-for-signing/">article</a>.</p>
+<p>In that article we explain how to create that signing subkey and use it in your computer. We also explain how to upload the public key to GitHub if you want to verify your Git commits.</p>
+<p>Sometimes you want to use the private subkey on other machines and you should only expose the private key of the subkey.</p>
+<p>One use case for that is signing commits on CI/CD. If you are using for example GitHub Actions, you could use a <a href="https://github.com/crazy-max/ghaction-import-gpg">GitHub Action to import GPG private keys</a>. After importing the private key you can sign new commits that are automatically created on the GitHub runners during the workflow executions.</p>
+<p>You could upload the full export of the GPG key but ideally you should upload (as GitHub secret) only the private key of the key you are using for signing. In order to do that you need to export the subkey independently from the primary key.</p>
+<h2 id="how-to-export-only-one-private-subkey-from-a-gpg-key">How to export only one private subkey from a GPG key</h2>
+<p>Given you have a key like the following one with a signing subkey (<code>8505CFE38CF47C8CBCF0C9D7FC47DBB5210FB475</code>):</p>
+<pre><code class="language-s">gpg -k --with-subkey-fingerprint 9DE332FB25C8A2D6EDF9DE8EB5B58E7CA8F56B98
+pub   rsa3072 2022-03-03 [C]
+      9DE332FB25C8A2D6EDF9DE8EB5B58E7CA8F56B98
+uid           [ultimate] Test User &lt;test.user@example.com&gt;
+sub   rsa3072 2022-03-03 [E]
+      850CF85F94AF49D149273E1746BD4F801229C887
+sub   rsa3072 2022-03-03 [S]
+      8505CFE38CF47C8CBCF0C9D7FC47DBB5210FB475
+</code></pre>
+<p>You can export the private key for the subkey with:</p>
+<pre><code class="language-s">gpg --armor --export-secret-subkeys 8505CFE38CF47C8CBCF0C9D7FC47DBB5210FB475! &gt; ~/Backups/primary_key.9DE332FB25C8A2D6EDF9DE8EB5B58E7CA8F56B98.sub_key.8505CFE38CF47C8CBCF0C9D7FC47DBB5210FB475.independent.secret.asc
+</code></pre>
+<p>You can also test the export by importing the same key in a different keyring. GPG works with a directory where it stores all the keys. That directory is called <code>homedir</code>. You can change the <code>homedir</code> using a command option <code>--homedir</code>. So you can create a new directory and import the key backup there:</p>
+<pre><code class="language-s">$ mkdir /tmp/import-only-subkey &amp;&amp; cd /tmp/import-only-subkey
+$ gpg --homedir=/tmp/import-only-subkey --import ~/Backups/primary_key.9DE332FB25C8A2D6EDF9DE8EB5B58E7CA8F56B98.sub_key.8505CFE38CF47C8CBCF0C9D7FC47DBB5210FB475.independent.secret.asc
+gpg: key B5B58E7CA8F56B98: public key &quot;Test User &lt;test.user@example.com&gt;&quot; imported
+gpg: To migrate 'secring.gpg', with each smartcard, run: gpg --card-status
+gpg: key B5B58E7CA8F56B98: secret key imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+gpg:       secret keys read: 1
+gpg:   secret keys imported: 1
+</code></pre>
+<p>If you list the private keys in that keyring you will see that the key still contains the public key for the primary key, even thought we only exported the subkey. But it does not include the other encryption subkey:</p>
+<pre><code class="language-s">$ gpg --homedir=/tmp/import-only-subkey -k --with-subkey-fingerprint 8505CFE38CF47C8CBCF0C9D7FC47DBB5210FB475
+pub   rsa3072 2022-03-03 [C]
+      9DE332FB25C8A2D6EDF9DE8EB5B58E7CA8F56B98
+uid           [ unknown] Test User &lt;test.user@example.com&gt;
+sub   rsa3072 2022-03-03 [S]
+      8505CFE38CF47C8CBCF0C9D7FC47DBB5210FB475
+</code></pre>
+<p>Now you can export it again and use it whenever you want to use it independently from the primary key. For example, as a GitHub secret used in a CI/CD process.</p>
+<h2 id="how-to-change-the-passphrase-for-the-subkey">How to change the passphrase for the subkey</h2>
+<p>In the process above you have to use the same passphrase for the original key and the independent subkey. Unfortunately you can not change the passphrase when you export the key. If you want to use a different passphrase for the subkey you have to change it later.</p>
+<pre><code class="language-s">$ gpg --homedir=/tmp/import-only-subkey --edit-key 8505CFE38CF47C8CBCF0C9D7FC47DBB5210FB475
+gpg (GnuPG) 2.2.20; Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Secret subkeys are available.
+
+pub  rsa3072/B5B58E7CA8F56B98
+     created: 2022-03-03  expires: never       usage: C   
+     trust: unknown       validity: unknown
+ssb  rsa3072/FC47DBB5210FB475
+     created: 2022-03-03  expires: never       usage: S   
+[ unknown] (1). Test User &lt;test.user@example.com&gt;
+gpg&gt; passwd
+gpg: key B5B58E7CA8F56B98/B5B58E7CA8F56B98: error changing passphrase: No secret key
+
+gpg&gt; save
+Key not changed so no update needed.
+</code></pre>
+<p>You have to enter the current password and the new one twice. You will get this error:</p>
+<pre><code class="language-s">gpg: key B5B58E7CA8F56B98/B5B58E7CA8F56B98: error changing passphrase: No secret key
+</code></pre>
+<p>That means GPG did not change the passphrase for the primary key, because there was not any private key for the primary key, but the passphrase was in fact changed.</p>
+<p>If you try to change the passphrase again with <code>passwd</code> you will see that the old password does not work anymore.</p>
+<p><a href="..">Back to home</a></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>
