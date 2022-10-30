@@ -166,4 +166,15 @@ In general, we found the environment secrets solution to be the best solution. Y
 
 Thank to [Constantin Bosse](https://github.com/cgbosse) and [Stephen Hosom](https://github.com/hosom) who carefully review the [original version of this article](https://github.com/Nautilus-Cyberneering/github-actions-secrets/pull/4).
 
+## MegaLinter team comment
+
+> Thanks a lot for this great article, its content is very interesting :)
+>
+> About trusting all the linters and their dependencies, I agree that risk zero does not exist, but since [MegaLinter](https://oxsecurity.github.io/megalinter/latest/) is part of [ox.security](https://www.ox.security), its own sources are watched by Ox services to detect security issues, including supply chain attacks
+> 
+> ![image](https://user-images.githubusercontent.com/17500430/198858440-3c8c7a3d-60c8-4035-a8af-b97c96e385a8.png)
+>
+> [Nicolas Vuillamy](https://github.com/nvuillam)
+
+
 [Back to home](./index.md)
