@@ -176,4 +176,12 @@ Thank to [Constantin Bosse](https://github.com/cgbosse) and [Stephen Hosom](http
 >
 > [Nicolas Vuillamy](https://github.com/nvuillam)
 
+## Update 2023-05-24
+
+MegaLinter is releasing a new version which removes variables from the environment used to call linters.
+
+- https://github.com/oxsecurity/megalinter/issues/2608
+- https://megalinter.io/beta/configuration/#environment-variables-security
+
+
 [Back to home](./index.md)
