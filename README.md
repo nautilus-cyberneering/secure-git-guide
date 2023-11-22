@@ -1,6 +1,6 @@
 # 🚨 Secure Git Guide 🚨
 
-![Index header](./docs/media/HEADER/SGG-IndexHeader-1600x500.jpg)
+![Index header](./media/HEADER/SGG-IndexHeader-1600x500.jpg)
 
 [![MegaLinter](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nautilus-Cyberneering/GPG-Bootcamp/actions/workflows/mega-linter.yml)
 ![Open Source](https://badgen.net/badge/Open%20Source/100%25/DA2CE7)
@@ -45,3 +45,14 @@ The way we work is simple:
 Here is the link to setting up a new discussion, we look forward to it: <https://github.com/Nautilus-Cyberneering/secure-git-guide/discussions>.
 
 We will be eternally thankful and add you to our credits at the bottom of our index.
+
+## Developing SvelteKit
+
+Install dependencies with `npm install` (or `pnpm install` or `yarn`). To start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
