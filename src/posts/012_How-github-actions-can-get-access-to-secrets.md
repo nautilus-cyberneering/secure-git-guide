@@ -36,10 +36,10 @@ As far as we know that's only possible because the action can also get a secret 
 For example, in the GitHub [actions/checkout@v2](https://github.com/actions/checkout) action, you can pass the token as an implicit input, but if you do not pass it, the actions will take it from the context and set it as a default value. You can see how the [default value is taken from the context](https://github.com/actions/checkout/blob/2541b1294d2704b0964813337f33b291d3f8596b/action.yml#L24).
 
 ```yml
-  token:
-    description: >
-        ...
-    default: ${{ github.token }}
+token:
+  description: >
+    ...
+  default: ${{ github.token }}
 ```
 
 That is something not well documented. You can use contexts not only in the workflow `yml` files but also in the `action.yml` files.
@@ -279,7 +279,7 @@ The documentation says the secrets are deleted from memory when the job is done.
 
 > Although GitHub Actions scrubs secrets from memory that are not referenced in the workflow (or an included action), the GITHUB_TOKEN and any referenced secrets can be harvested by a determined attacker.
 
-*It's best to assume that a malicious action has access to any secrets or information that the runner has for that a job - regardless of if the secrets are on disk or in memory. Actions are not sandboxed within a workflow job, the security boundary is only between jobs/runs.*
+_It's best to assume that a malicious action has access to any secrets or information that the runner has for that a job - regardless of if the secrets are on disk or in memory. Actions are not sandboxed within a workflow job, the security boundary is only between jobs/runs._
 
 See [accessing secrets](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#accessing-secrets).
 

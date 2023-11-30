@@ -46,24 +46,24 @@ Reposurgeon has two modes: interactive and non-interactive. If you execute repos
 ```s
 $ reposurgeon
 reposurgeon% help
-6. The Command Interpreter                 
+6. The Command Interpreter
   1. Command syntax                        syntax*
   2. Finding your way around               help, history, shell, quit
   3. Regular Expressions                   regexp*
   4. Selection syntax                      selection*, functions*
   5. Redirection and shell-like features   redirection*
-7. Import and Export                       
+7. Import and Export
   1. Reading and writing repositories      read, write
   2. Repository type preference            prefer, sourcetype
   3. Rebuilds in place                     rebuild
   5. File preservation                     preserve, unpreserve
   6. Incorporating release tarballs        incorporate
   7. The repository list                   choose, drop, rename
-8. Information and reports                 
+8. Information and reports
   1. Reports on the DAG                    list, index, names, stamp, tags, inspect, graph, lint, when
   2. Statistics                            stats, count, sizes
   3. Examining tree states                 manifest, checkout, diff
-9. Surgical Operations                     
+9. Surgical Operations
   1. Commit deletion                       squash, delete
   2. Commit mutation                       merge, unmerge, reparent, split, add, remove, tagify, reorder
   3. Branches                              branch, branchlift, debranch
@@ -73,26 +73,26 @@ reposurgeon% help
   7. Path reports and modifications        path, setperm
   8. Timequakes and time offsets           timequake, timeoffset
   9. Miscellanea                           renumber, transcode
-10. Artifact handling                      
+10. Artifact handling
   1. Attributions                          authors
   2. Ignore patterns                       ignores
   3. Reference lifting                     references, legacy
   4. Changelogs                            changelogs
   5. Clique coalescence                    coalesce
 11. Control Options                        options*, set, clear
-12. Scripting and debugging support        
+12. Scripting and debugging support
   1. Variables, macros, and scripts        assign, unassign, define, do, undefine, script, print
   2. Housekeeping                          gc
   3. Diagnostics                           log, logfile
   4. Debugging                             resolve, version, hash, sizeof, strip
   5. Profiling                             elapsed, timing, readlimit, memory, profile, exit
-Starred topics are not commands.           
-reposurgeon%  
+Starred topics are not commands.
+reposurgeon%
 ```
 
 You can also create your own script and execute is later. The simplest think you can do is:
 
-```s
+````s
 reposurgeon "read ." lint
 ```s
 
@@ -117,7 +117,7 @@ Let's first create an empty repo:
 mkdir /tmp/remove-commits-example
 cd /tmp/remove-commits-example
 git init
-```
+````
 
 Now we can add some commits. In order to simplify the example the commits we want to delete start with the prefix `drop`.
 
@@ -161,9 +161,9 @@ reposurgeon "script remove-commits.rs"
 
 All the lines are self-explaining except maybe for the commit deletion one: `/drop/c delete`.
 
-The deletion command format is: `{SELECTION} delete` where [SELECTION](http://www.catb.org/~esr/reposurgeon/repository-editing.html#selections) defines what you want to delete. That is very common for reposurgeon commands. The selection argument allows you to define which internal objects you want to act on. There are different types of selections. One of them  it a "text search" which is a regular expression.
+The deletion command format is: `{SELECTION} delete` where [SELECTION](http://www.catb.org/~esr/reposurgeon/repository-editing.html#selections) defines what you want to delete. That is very common for reposurgeon commands. The selection argument allows you to define which internal objects you want to act on. There are different types of selections. One of them it a "text search" which is a regular expression.
 
->A text search normally matches against the comment fields of commits and annotated tags, or against their author/committer names, or against the names of tags; also the text of passthrough objects.
+> A text search normally matches against the comment fields of commits and annotated tags, or against their author/committer names, or against the names of tags; also the text of passthrough objects.
 
 In our case the selection `/drop/` means that we want to search for all objects containing the word `drop`.
 

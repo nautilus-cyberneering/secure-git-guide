@@ -25,18 +25,18 @@ Author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 Date:   Tue Jun 7 00:35:52 2022 +0000
 
     build(deps): bump actions/setup-node from 3.2.0 to 3.3.0
-    
+
     Bumps [actions/setup-node](https://github.com/actions/setup-node) from 3.2.0 to 3.3.0.
     - [Release notes](https://github.com/actions/setup-node/releases)
     - [Commits](https://github.com/actions/setup-node/compare/v3.2.0...v3.3.0)
-    
+
     ---
     updated-dependencies:
     - dependency-name: actions/setup-node
       dependency-type: direct:production
       update-type: version-update:semver-minor
     ...
-    
+
     Signed-off-by: dependabot[bot] <support@github.com>
 ```
 
@@ -66,7 +66,8 @@ Date:   Tue Jun 7 00:35:52 2022 +0000
 ...
 ```
 
-This time you see this message: 
+This time you see this message:
+
 ```s
 gpg - Good signature from "GitHub (web-flow commit signing) ...
 ```
@@ -81,13 +82,13 @@ There is NO WARRANTY, to the extent permitted by law.
 
 
 pub  rsa2048/4AEE18F83AFDEB23
-     created: 2017-08-16  expires: never       usage: SC  
+     created: 2017-08-16  expires: never       usage: SC
      trust: unknown       validity: unknown
 [ unknown] (1). GitHub (web-flow commit signing) <noreply@github.com>
 
 gpg> trust
 pub  rsa2048/4AEE18F83AFDEB23
-     created: 2017-08-16  expires: never       usage: SC  
+     created: 2017-08-16  expires: never       usage: SC
      trust: unknown       validity: unknown
 [ unknown] (1). GitHub (web-flow commit signing) <noreply@github.com>
 
@@ -105,7 +106,7 @@ Your decision? 5
 Do you really want to set this key to ultimate trust? (y/N) y
 
 pub  rsa2048/4AEE18F83AFDEB23
-     created: 2017-08-16  expires: never       usage: SC  
+     created: 2017-08-16  expires: never       usage: SC
      trust: ultimate      validity: unknown
 [ unknown] (1). GitHub (web-flow commit signing) <noreply@github.com>
 Please note that the shown key validity is not necessarily correct

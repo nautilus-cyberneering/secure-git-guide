@@ -78,10 +78,10 @@ There is NO WARRANTY, to the extent permitted by law.
 Secret subkeys are available.
 
 pub  rsa3072/B5B58E7CA8F56B98
-     created: 2022-03-03  expires: never       usage: C   
+     created: 2022-03-03  expires: never       usage: C
      trust: unknown       validity: unknown
 ssb  rsa3072/FC47DBB5210FB475
-     created: 2022-03-03  expires: never       usage: S   
+     created: 2022-03-03  expires: never       usage: S
 [ unknown] (1). Test User <test.user@example.com>
 gpg> passwd
 gpg: key B5B58E7CA8F56B98/B5B58E7CA8F56B98: error changing passphrase: No secret key

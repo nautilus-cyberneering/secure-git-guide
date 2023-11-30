@@ -181,7 +181,7 @@ git commit --no-gpg-sign -m "add object-1.txt"
 You can get the object with:
 
 ```s
-git checkout my-objects-object-1 && cat object-1.txt 
+git checkout my-objects-object-1 && cat object-1.txt
 ```
 
 But actually the object value is accessible directly just like an standard file. All you need to do is `checkout` the reference (the branch) we are using to store the object.
@@ -215,7 +215,7 @@ This model uses an orphan branch for each object. An "orphan" branch is a branch
 
 ## How to solve race conditions
 
-We have seen two possible models to use Git to store your data as a key-value database. But does this database  implementation offer you a way to handle race conditions?
+We have seen two possible models to use Git to store your data as a key-value database. But does this database implementation offer you a way to handle race conditions?
 
 At some point, you are going to have two processes reading the same object and trying to update it at the same time. One of them is going to overwrite a previous value.
 
@@ -274,10 +274,10 @@ Now we can increment the counter with the first process and `push` the new value
 ```s
 cd /tmp/my-counters-process-1
 git checkout my-counters-counter-1
-echo "1" > counter-1.txt 
+echo "1" > counter-1.txt
 git add .
 git commit  --no-gpg-sign -m "increment counter-1 to 1"
-echo "2" > counter-1.txt 
+echo "2" > counter-1.txt
 git add .
 git commit  --no-gpg-sign -m "increment counter-1 to 2"
 cat counter-1.txt
@@ -324,7 +324,7 @@ You have updated the `origin` (our database) with a new value. Now, if you try t
 ```s
 cd /tmp/my-counters-process-2
 git checkout my-counters-counter-1
-echo "1" > counter-1.txt 
+echo "1" > counter-1.txt
 git add .
 git commit  --no-gpg-sign -m "increment counter-1 to 1"
 cat counter-1.txt
@@ -387,7 +387,7 @@ Fortunately, Git has a `push` option “--atomic” that does exactly that: "Eit
 So you could do something like:
 
 ```s
-git push --atomic origin refs/heads/my-counters-counter-1 refs/heads/my-counters-counter-2 
+git push --atomic origin refs/heads/my-counters-counter-1 refs/heads/my-counters-counter-2
 ```
 
 More info about Atomic pushes:

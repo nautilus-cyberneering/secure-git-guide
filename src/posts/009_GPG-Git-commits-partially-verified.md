@@ -314,7 +314,7 @@ If we were using GPG signatures, we would have only the committer signature on e
 
 On GitHub documentation, you can read:
 
->"The rebase and merge behavior on GitHub deviates slightly from Git rebase. Rebase and merge on GitHub will always update the committer information and create new commit SHAs, whereas Git rebase outside of GitHub does not change the committer information when the rebase happens on top of an ancestor commit. For more information about Git rebase, see git-rebase in the Git documentation."
+> "The rebase and merge behavior on GitHub deviates slightly from Git rebase. Rebase and merge on GitHub will always update the committer information and create new commit SHAs, whereas Git rebase outside of GitHub does not change the committer information when the rebase happens on top of an ancestor commit. For more information about Git rebase, see git-rebase in the Git documentation."
 
 When it is possible to merge with fast-forward, Git will not change the original committer info. If you rerun the merge example using rebase with fast-forward:
 
