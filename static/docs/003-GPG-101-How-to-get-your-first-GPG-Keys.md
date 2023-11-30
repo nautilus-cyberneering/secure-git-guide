@@ -7,9 +7,9 @@
 The steps to install GPG on your computer are the following:
 
 1. Download the necessary software for your Operating System at:
-    - [Windows](https://gpg4win.org/download.html)
-    - [Linux - Installed through terminal](https://linuxhint.com/gpg-command-ubuntu/)
-    - [Mac OS](https://sourceforge.net/p/gpgosx/docu/Download/)
+   - [Windows](https://gpg4win.org/download.html)
+   - [Linux - Installed through terminal](https://linuxhint.com/gpg-command-ubuntu/)
+   - [Mac OS](https://sourceforge.net/p/gpgosx/docu/Download/)
 
 ## GPG4Win Kleopatra
 
@@ -69,6 +69,7 @@ Here is a series of screenshots of the process using the Kleopatra application f
 ### Creating a Revocation Certificate
 
 ---
+
 (1)
 
 ![012](./media/003/KLEO_CREATE_012.png)
@@ -101,6 +102,7 @@ In order to generate your new keys you have two options:
 ### Default Setup
 
 ---
+
 Open the command line as an admin and type:
 
     ```terminal

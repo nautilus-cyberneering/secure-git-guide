@@ -20,12 +20,12 @@ Here you will find the following information:
 Links to two visual user interface applications:
 
 - [GitHub Desktop](#github-desktop-app)  
-        Very basic easy to use user interface built by GitHub.
-        Can through errors since it does not provide good support for repositories with GitHub submodules as of 2022-02-21.
+   Very basic easy to use user interface built by GitHub.
+  Can through errors since it does not provide good support for repositories with GitHub submodules as of 2022-02-21.
 
 - [GitKraken](#gitkraken-desktop-app)  
-        Complete solution with all bells and whistles, from GPG, SSH key creation, to in app pull requests, etc. Comes in three versions: Free, Pro, Enterprise.
-        The Free versions works with public online or locally hosted repositories.
+   Complete solution with all bells and whistles, from GPG, SSH key creation, to in app pull requests, etc. Comes in three versions: Free, Pro, Enterprise.
+  The Free versions works with public online or locally hosted repositories.
 
 ## Git
 
@@ -35,7 +35,7 @@ Links to two visual user interface applications:
 
 Wikipedia.org Definition:
 
->"Git (/ɡɪt/) is software for tracking changes in any set of files, usually used for coordinating work among programmers collaboratively developing source code during software development. Its goals include speed, data integrity, and support for distributed, non-linear workflows (thousands of parallel branches running on different systems)."
+> "Git (/ɡɪt/) is software for tracking changes in any set of files, usually used for coordinating work among programmers collaboratively developing source code during software development. Its goals include speed, data integrity, and support for distributed, non-linear workflows (thousands of parallel branches running on different systems)."
 
 Essentially it is a software that helps track and coordinate software development among developers.
 
@@ -48,7 +48,7 @@ Here are some good videos that explain the what and how of Git:
 
 #### Cloning Repositories
 
->git clone <git_repository ssh url>
+> git clone <git_repository ssh url>
 
 In order to get the git repository ssh url you have to go to the repository, and select the green "Code" button, and here choose the "ssh" tab to then copy the url as shown in the following image:
 
@@ -56,9 +56,9 @@ In order to get the git repository ssh url you have to go to the repository, and
 
 You have to click on "Code" and then select "SSH" and copy the address which whould look something similar to this:
 
->git@github.com:Nautilus-Cyberneering/chinese-ideographs-website.git
+> git@github.com:Nautilus-Cyberneering/chinese-ideographs-website.git
 
-**Important Note:
+\*\*Important Note:
 
 Before doing this step you might have to set up your git installation with OPENSSH.
 If you are running Windows you will have to activate the OPENSSH service and then generate a new SSH-Key for yourself and copy it into your GitHub profile security settings to do so here are some useful links:
@@ -83,9 +83,9 @@ More on the "git clone":
 
       git branch -a
 
-    Note: A good habit is to update your remote repositories information to make sure that you see all the remote repositories. You can do this using the following command:
+  Note: A good habit is to update your remote repositories information to make sure that you see all the remote repositories. You can do this using the following command:
 
-        git fetch   
+        git fetch
 
 #### Switching Branches
 
@@ -95,7 +95,7 @@ More on the "git clone":
 
 - Remote
 
-        git checkout 
+        git checkout
 
 #### Deleting
 

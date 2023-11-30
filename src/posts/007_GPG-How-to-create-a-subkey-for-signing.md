@@ -46,7 +46,7 @@ sub   rsa4096 2021-11-19 [E]
 The meaning for the letters inside brackets are the [GPG key capabilities](https://github.com/gpg/gnupg/blob/master/doc/DETAILS#field-12---key-capabilities):
 
 | Character | Capability     |
-|-----------|----------------|
+| --------- | -------------- |
 | S         | Sign           |
 | C         | Certify        |
 | E         | Encrypt        |
@@ -64,10 +64,10 @@ There is NO WARRANTY, to the extent permitted by law.
 Secret key is available.
 
 sec  rsa4096/27304EDD6079B81C
-     created: 2021-11-19  expires: never       usage: SC  
+     created: 2021-11-19  expires: never       usage: SC
      trust: ultimate      validity: ultimate
 ssb  rsa4096/5B6BDD35BEDFBF6F
-     created: 2021-11-19  expires: never       usage: E   
+     created: 2021-11-19  expires: never       usage: E
 [ultimate] (1). A committer <committer@example.com>
 
 gpg> addkey
@@ -87,7 +87,7 @@ Please specify how long the key should be valid.
       <n>w = key expires in n weeks
       <n>m = key expires in n months
       <n>y = key expires in n years
-Key is valid for? (0) 
+Key is valid for? (0)
 Key does not expire at all
 Is this correct? (y/N) y
 Really create? (y/N) y
@@ -97,12 +97,12 @@ disks) during the prime generation; this gives the random number
 generator a better chance to gain enough entropy.
 
 sec  rsa4096/27304EDD6079B81C
-     created: 2021-11-19  expires: never       usage: SC  
+     created: 2021-11-19  expires: never       usage: SC
      trust: ultimate      validity: ultimate
 ssb  rsa4096/5B6BDD35BEDFBF6F
-     created: 2021-11-19  expires: never       usage: E   
+     created: 2021-11-19  expires: never       usage: E
 ssb  rsa4096/3F39AA1432CA6AD7
-     created: 2021-11-26  expires: never       usage: S   
+     created: 2021-11-26  expires: never       usage: S
 [ultimate] (1). A committer <committer@example.com>
 
 gpg> save
@@ -144,19 +144,19 @@ There is NO WARRANTY, to the extent permitted by law.
 Secret key is available.
 
 sec  rsa4096/27304EDD6079B81C
-     created: 2021-11-19  expires: never       usage: SC  
+     created: 2021-11-19  expires: never       usage: SC
      trust: ultimate      validity: ultimate
 ssb  rsa4096/5B6BDD35BEDFBF6F
-     created: 2021-11-19  expires: never       usage: E   
+     created: 2021-11-19  expires: never       usage: E
 ssb  rsa4096/3F39AA1432CA6AD7
-     created: 2021-11-26  expires: never       usage: S   
+     created: 2021-11-26  expires: never       usage: S
 [ultimate] (1). A committer <committer@example.com>
 
 gpg> change-usage
 Changing usage of the primary key.
 
-Possible actions for a RSA key: Sign Certify Encrypt Authenticate 
-Current allowed actions: Sign Certify 
+Possible actions for a RSA key: Sign Certify Encrypt Authenticate
+Current allowed actions: Sign Certify
 
    (S) Toggle the sign capability
    (E) Toggle the encrypt capability
@@ -165,8 +165,8 @@ Current allowed actions: Sign Certify
 
 Your selection? S
 
-Possible actions for a RSA key: Sign Certify Encrypt Authenticate 
-Current allowed actions: Certify 
+Possible actions for a RSA key: Sign Certify Encrypt Authenticate
+Current allowed actions: Certify
 
    (S) Toggle the sign capability
    (E) Toggle the encrypt capability
@@ -176,12 +176,12 @@ Current allowed actions: Certify
 Your selection? Q
 
 sec  rsa4096/27304EDD6079B81C
-     created: 2021-11-19  expires: never       usage: C   
+     created: 2021-11-19  expires: never       usage: C
      trust: ultimate      validity: ultimate
 ssb  rsa4096/5B6BDD35BEDFBF6F
-     created: 2021-11-19  expires: never       usage: E   
+     created: 2021-11-19  expires: never       usage: E
 ssb  rsa4096/3F39AA1432CA6AD7
-     created: 2021-11-26  expires: never       usage: S   
+     created: 2021-11-26  expires: never       usage: S
 [ultimate] (1). A committer <committer@example.com>
 
 gpg> save

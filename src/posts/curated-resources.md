@@ -65,7 +65,7 @@ Index:
 
 ### Great Resource (Git)
 
-- [Git Magic Resource](http://www-cs-students.stanford.edu/~blynn/gitmagic/) (Very extensive and documented)  covers Git to some extent and focuses GitHub
+- [Git Magic Resource](http://www-cs-students.stanford.edu/~blynn/gitmagic/) (Very extensive and documented) covers Git to some extent and focuses GitHub
 - [Awesome List of resources for Git and Github](https://project-awesome.org/phillipadsmith/awesome-github)
 
 ### Books (Git)
@@ -101,7 +101,7 @@ GitHub is an online platform service so that in essence you do not need to insta
 
 ### Great Resource (GitHub)
 
-- [Git Magic Resource](http://www-cs-students.stanford.edu/~blynn/gitmagic/) (Very extensive and documented)  covers Git to some extent and focuses GitHub
+- [Git Magic Resource](http://www-cs-students.stanford.edu/~blynn/gitmagic/) (Very extensive and documented) covers Git to some extent and focuses GitHub
 - [Awesome List of resources for Git and Github](https://project-awesome.org/phillipadsmith/awesome-github)
 
 ### Books

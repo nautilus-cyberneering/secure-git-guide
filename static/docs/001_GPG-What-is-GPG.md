@@ -45,5 +45,5 @@ More recent releases of GnuPG 2.x ("modern" and the now deprecated "stable" seri
 ---
 
 Note: Source [WIKIPEDIA](https://en.wikipedia.org/wiki/GNU_Privacy_Guard)
-  
+
 [Back to home](./index.md)
