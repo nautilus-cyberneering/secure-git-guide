@@ -17,6 +17,13 @@ That is why we have been wondering if the MegaLinter itself could be a security 
 - [Links](#links)
 - [Credits](#credits)
 
+## Update 2023-05-24
+
+MegaLinter is releasing a new version which removes variables from the environment used to call linters.
+
+- <https://github.com/oxsecurity/megalinter/issues/2608>
+- <https://megalinter.io/beta/configuration/#environment-variables-security>
+
 ## Default installation for MegaLinter
 
 Supposing you created a new organization on GitHub, and a new repository and you wanted to use MegaLinter. After [installing](https://oxsecurity.github.io/megalinter/latest/installation/) it, it would have added a workflow with this step:
