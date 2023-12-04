@@ -1,9 +1,9 @@
 <script lang="ts">
 	import * as config from '$lib/config';
 	export let data;
-	import Hero from './hero.svelte';
-	import Contribute from './contribute.svelte';
-	import Contact from './contact.svelte';
+	import Hero from '$lib/components/Hero.svelte';
+	import Contribute from '$lib/components/Contribute.svelte';
+	import Contact from '$lib/components/Contact.svelte';
 </script>
 
 <svelte:head>
@@ -16,12 +16,12 @@
 	<section class="articles-section">
 		<div class="articles-image">
 			<img
-				src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+				src="/images/brooke-cagle--uHVRvDr7pg-unsplash.jpg"
 				class="top-img"
 				alt="group of people talking"
 			/>
 			<img
-				src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+				src="/images/annie-spratt-QckxruozjRg-unsplash.jpg"
 				class="btm-img"
 				alt="group of people talking with laptops"
 			/>
