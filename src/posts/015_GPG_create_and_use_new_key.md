@@ -1,52 +1,51 @@
 ---
 title: 15. Generate and use a new key for Git.
 description: Generate and use a new key for Git.
-date: '2023-12-03'
+date: '2023-4-23'
 published: true
 ---
 
 This walkthrough guide show how to create a new GPG key and use it for signing your git commits.
 
 - [Setup GPG](#setup)
-- [Launching GPG<](#launching-gpg)
+- [Launching GPG](#launching-gpg)
 - [Making a Key for Git](#new-key)
-   - [Certification and Signing](#cert-and-sign)
+  - [Certification and Signing](#cert-and-sign)
 - [Generate a New Key](#gen-key)
-   - [Step 1: Create the primary key and ID](#create-primary)
-      - [Step 1.0: Generate Key](#gStep 1.4: Key Expiryenerate)
-      - [Step 1.1: Key Type](#key-type)
-      - [Step 1.2: Key Capabilities](#key-capabilities)
-      - [Step 1.3: Key Curve](#key-curve)
-      - [Step 1.4: Key Expiry](#key-expiry)
-      - [Step 1.5: Key Id](#key-id)
-      - [Step 1.6: Key Id User](#key-id-user)
-      - [Step 1.7: Key Id Email](#key-id-email)
-      - [Step 1.8: Key Id Comment](#key-id-comment)
-      - [Step 1.9: Review Key Id](#review-key-id)
-      - [Step 1.10: Key Password](#key-password)
-   - [Finished Step 1](#finished-key)
-   - [Step 2: Add a Signing Subkey to your GPG Key](#signing-key)
-      - [Step 2.0: List Keys](#list-keys)
-      - [Step 2.1: Edit Key](#edit-key)
-      - [Step 2.2: Add Subkey](#add-subkey)
-      - [Step 2.3: Subkey Type](#subkey-type)
-      - [Step 2.4: Subkey Curve](#subkey-curve)
-      - [Step 2.5: Subkey Expiry](#subkey-expiry)
-      - [Step 2.6: Confirm Add Subkey](#confirm-add-subkey)
-      - [Step 2.7: Save and Exit Editing Key](#save-and-exit)
-   - [Step 3: Confirm By Signing a Test-Message](#test-sign)
-      - [Step 3.1: List Subkeys](#list-subkeys)
-      - [Step 3.2: Sign Test Message](#sign-test-message)
-      - [Step 3.3: Verify Test Signature](#verify-test-signature)
+  - [Step 1: Create the primary key and ID](#create-primary)
+    - [Step 1.0: Generate Key](#generate)
+    - [Step 1.1: Key Type](#key-type)
+    - [Step 1.2: Key Capabilities](#key-capabilities)
+    - [Step 1.3: Key Curve](#key-curve)
+    - [Step 1.4: Key Expiry](#key-expiry)
+    - [Step 1.5: Key Id](#key-id)
+    - [Step 1.6: Key Id User](#key-id-user)
+    - [Step 1.7: Key Id Email](#key-id-email)
+    - [Step 1.8: Key Id Comment](#key-id-comment)
+    - [Step 1.9: Review Key Id](#review-key-id)
+    - [Step 1.10: Key Password](#key-password)
+  - [Finished Step 1](#finished-key)
+  - [Step 2: Add a Signing Subkey to your GPG Key](#signing-key)
+    - [Step 2.0: List Keys](#list-keys)
+    - [Step 2.1: Edit Key](#edit-key)
+    - [Step 2.2: Add Subkey](#add-subkey)
+    - [Step 2.3: Subkey Type](#subkey-type)
+    - [Step 2.4: Subkey Curve](#subkey-curve)
+    - [Step 2.5: Subkey Expiry](#subkey-expiry)
+    - [Step 2.6: Confirm Add Subkey](#confirm-add-subkey)
+    - [Step 2.7: Save and Exit Editing Key](#save-and-exit)
+  - [Step 3: Confirm By Signing a Test-Message](#test-sign)
+    - [Step 3.1: List Subkeys](#list-subkeys)
+    - [Step 3.2: Sign Test Message](#sign-test-message)
+    - [Step 3.3: Verify Test Signature](#verify-test-signature)
 - [Sign Commits with Git](#sign-commits)
-   - [Add Signing Key to Git](#add-key-to-git)
-   - [Sign Commits By Default](#auto-sign-commits)
+  - [Add Signing Key to Git](#add-key-to-git)
+  - [Sign Commits By Default](#auto-sign-commits)
 - [Register Signing Key with Github or Gitlab](#online-key-registration)
-   - [Export Public Signing Key](#export-key)
-      - [Register Key in Gitlab](#register-key-in-gitlab)
-      - [Register Key in Github](#register-key-in-github)
+  - [Export Public Signing Key](#export-key)
+    - [Register Key in Gitlab](#register-key-in-gitlab)
+    - [Register Key in Github](#register-key-in-github)
 - [Further Reading](#further-reading)
-
 
 <h2 id='setup'>Setup GPG</h2>
 
@@ -85,6 +84,7 @@ In this guide we separate these two roles onto different keys.
 <h2 id='gen-key'>Generate a New Key</h2>
 
 To fulfill our goals of:
+
 1. Avoiding the generation of a Encryption Key.
 2. Using separate keys for certification and signing.
 
@@ -99,19 +99,21 @@ In this first step follow the interactive prompted guide to create the primary k
 <h4 id='generate'>Step 1.0: Generate Key</h4>
 
 We load gpg with two arguments:
+
 1. Expert, we need this for selecting the key capabilities.
 2. Full Generate Key, we need this to generate the key and make the ID.
 
-``` shell
+```shell
 $ gpg --expert --full-generate-key
 ```
+
 <h4 id='key-type'>Step 1.1: Key Type</h4>
 
 The first output prompt should look like this:
 
 > Note: it is asking about what form the `PRIMARY KEY` should take.
 
-``` r
+```r
 Please select what kind of key you want:
    (1) RSA and RSA
    (2) DSA and Elgamal
@@ -131,15 +133,15 @@ Your selection?
 
 For this guide we wish to remove the signing capabilities for the primary key. So it is needed that you select an option with "set your own capabilities".
 
-__Select number `11`.__
+**Select number `11`.**
 
 <h4 id='key-capabilities'>Step 1.2: Key Capabilities</h4>
 
 The second prompt asks about the capabilities for the key you are about to generate:
 
-``` r
-Possible actions for this ECC key: Sign Certify Authenticate 
-Current allowed actions: Sign Certify 
+```r
+Possible actions for this ECC key: Sign Certify Authenticate
+Current allowed actions: Sign Certify
 
    (S) Toggle the sign capability
    (A) Toggle the authenticate capability
@@ -150,17 +152,17 @@ Your selection?
 
 For this prompt we wish to toggle the sign capability so that the current actions reads:
 
-``` r
+```r
 Current allowed actions: Certify
 ```
 
-__Select number `Q` to move to the next prompt.__
+**Select number `Q` to move to the next prompt.**
 
 <h4 id='key-curve'>Step 1.3: Key Curve</h4>
 
 The next prompt has a list of elliptic curves to choose from.
 
-``` r
+```r
 Please select which elliptic curve you want:
    (1) Curve 25519 *default*
    (2) Curve 448
@@ -176,13 +178,13 @@ Your selection?
 
 GPG chooses a very reasonable default: `Curve 25519`.
 
-__Just press `enter` to select the default and move on to the next prompt.__
+**Just press `enter` to select the default and move on to the next prompt.**
 
 <h4 id='key-expiry'>Step 1.4: Key Expiry</h4>
 
 The next prompt is where you select the expiry of you primary key.
 
-``` r
+```r
 Please specify how long the key should be valid.
          0 = key does not expire
       <n>  = key expires in n days
@@ -192,17 +194,17 @@ Please specify how long the key should be valid.
 Key is valid for?
 ```
 
-> Note: Choosing an appropriate expiry is a bit of an art.  In general it is important not to choose `key dose not expire`.
+> Note: Choosing an appropriate expiry is a bit of an art. In general it is important not to choose `key dose not expire`.
 >
 > As it is not difficult to adjust this expiry in the future, it is reasonable to choose a reasonably short time, such as half a year.
 
-__Choose you expiry, perhaps `180` days, and press `enter` to go to the next prompt.__
+**Choose you expiry, perhaps `180` days, and press `enter` to go to the next prompt.**
 
 <h4 id='key-id'>Step 1.5: Key Id</h4>
 
 The next set of prompts asks for information for the `PRIMARY ID` that is certified by the `PRIMARY KEY`. Once you have generated your primary key it is possible to add as many ID's as you need to you gpg key.
 
-``` r
+```r
 GnuPG needs to construct a user ID to identify your key.
 ```
 
@@ -210,7 +212,7 @@ GnuPG needs to construct a user ID to identify your key.
 
 Firstly, it asks for for your _"real name"_.
 
-``` r
+```r
 Real name:
 ```
 
@@ -218,41 +220,41 @@ Real name:
 >
 > For the purposes of this guide it is suggested that you select the same name as you use for authoring your git commits.
 
-__Enter the `name` of your pseudonym, and press `enter`.__
+**Enter the `name` of your pseudonym, and press `enter`.**
 
 <h4 id='key-id-email'>Step 1.7: Key Id Email</h4>
 
 The next prompt asks for your email.
 
-``` r
+```r
 Email address:
 ```
 
 > Note: for the purposes of this guide it is suggested that you select the same email as you use for authoring you git commits.
 
-__Enter the `email` of your pseudonym, and press `enter`.__
+**Enter the `email` of your pseudonym, and press `enter`.**
 
 <h4 id='key-id-comment'>Step 1.8: Key Id Comment</h4>
 
 The next prompt asks for a comment.
 
-``` r
+```r
 Comment:
 ```
 
 > Note: It is good to enter a comment that suggests that this key is online and of somehow lower securely than a offline dedicated key.
 
-__Enter a `comment`, such as `Online Key`, and press `enter`.__
+**Enter a `comment`, such as `Online Key`, and press `enter`.**
 
 <h4 id='review-key-id'>Step 1.9: Review Key Id</h4>
 
-``` r
+```r
 You selected this USER-ID:
 ```
 
 At this stage you get to review the proposed ID.
 
-__If everything looks good, select `O`, and proceed to the generation of you key.__
+**If everything looks good, select `O`, and proceed to the generation of you key.**
 
 <h4 id='key-password'>Step 1.10: Key Password</h4>
 
@@ -264,7 +266,7 @@ In general, if your computer is compromised, then you key is also compromised in
 
 Now you have generated you new gpg key. GPG prints out some information to take note of.
 
-1. GPG prints out the location of a revocation certificate for the newly generated key.  This certificate is useful if you have forgotten the password, or otherwise lost the private keys to you gpg-key.
+1. GPG prints out the location of a revocation certificate for the newly generated key. This certificate is useful if you have forgotten the password, or otherwise lost the private keys to you gpg-key.
 
 2. The fingerprint of you primary key. This hexadecimal number is used to unambiguously refer to the primary key that you just generated.
 
@@ -278,7 +280,7 @@ Since we are wanting to use our gpg key for interaction with the real world, in 
 
 The long key-fingerprint that was printed to the terminal at the generation of the key is needed. However if you have closed you terminal, there is no issue we can quickly work it out:
 
-``` shell
+```shell
 $ gpg --list-secret-keys
 ```
 
@@ -290,15 +292,15 @@ You should be able to find the key fingerprint for your key, it should looks som
 
 We now need to edit the key to add a new subkey that will be responsible for signing messages (and git commits).
 
-``` shell
+```shell
 $ gpg --edit-key 0123456789ABCDEF0123456789ABCDEF01234567
 ```
 
->> Note: You need to adjust your commands fingerprint to the key that you generated in __Step 1__.
+> > Note: You need to adjust your commands fingerprint to the key that you generated in **Step 1**.
 
 The prompt should tell you:
 
-``` r
+```r
 Secret key is available.
 ```
 
@@ -310,13 +312,13 @@ The gpg prompt will appear:
 gpg>
 ```
 
-__Enter the command `addkey`, and press `enter` to continue.__
+**Enter the command `addkey`, and press `enter` to continue.**
 
 <h4 id='subkey-type'>Step 2.3: Subkey Type</h4>
 
 The next prompt asks for what kind of key you wish to add:
 
-``` r
+```r
 Please select what kind of key you want:
    (3) DSA (sign only)
    (4) RSA (sign only)
@@ -328,13 +330,13 @@ Please select what kind of key you want:
 Your selection?
 ```
 
-__Select `10`, and press `enter` to continue.__
+**Select `10`, and press `enter` to continue.**
 
 <h4 id='subkey-curve'>Step 2.4: Subkey Curve</h4>
 
 The next prompt, as before, asks for the curve you wish for the new key:
 
-``` r
+```r
 Please select which elliptic curve you want:
    (1) Curve 25519 *default*
    (4) NIST P-384
@@ -342,13 +344,13 @@ Please select which elliptic curve you want:
 Your selection?
 ```
 
-__The default is good, just press `enter` to continue.__
+**The default is good, just press `enter` to continue.**
 
 <h4 id='subkey-expiry'>Step 2.5: Subkey Expiry</h4>
 
 The next prompt, as before, asks for the key expiry:
 
-``` r
+```r
 Please specify how long the key should be valid.
          0 = key does not expire
       <n>  = key expires in n days
@@ -360,13 +362,13 @@ Key is valid for?
 
 It is good to select a date that is sooner than the primary key expiry. In this guide we choose 3/4 of the primary key expiry as a suggestion:
 
-__Enter `135` and press `enter` to continue.__
+**Enter `135` and press `enter` to continue.**
 
 <h4 id='confirm-add-subkey'>Step 2.6: Confirm Add Subkey</h4>
 
 Pleaser review, and confirm that you wish to create and add this key.
 
-``` r
+```r
 Really create? (y/N)
 ```
 
@@ -380,7 +382,7 @@ the gpg prompt will return:
 gpg>
 ```
 
-__Enter `save`, and press exit to commit the changes and exit.__
+**Enter `save`, and press exit to commit the changes and exit.**
 
 <h3 id='test-sign'>Step 3: Confirm By Signing a Test-Message</h3>
 
@@ -390,7 +392,7 @@ Now we sign a message and verify it, confirming the signature was made by the su
 
 Lets first show the fingerprint of the signing subkey that we just created:
 
-``` shell
+```shell
 gpg --with-subkey-fingerprints --list-key 0123456789ABCDEF0123456789ABCDEF01234567
 ```
 
@@ -398,25 +400,25 @@ This command will output the details about the key selected, and show the sub-ke
 
 <h4 id='sign-test-message'>Step 3.2: Sign Test Message</h4>
 
-``` shell
+```shell
 gpg --armor --sign-with 0123456789ABCDEF0123456789ABCDEF01234567 --sign
 ```
 
 A prompt will ask for the message to sign.
 
-__Type You Message, such as `0123456789ABCDEF0123456789ABCDEF01234567 gpg test-sign`, and press `enter`, then "ctl-d"/"cmd-d" to finish.__
+**Type You Message, such as `0123456789ABCDEF0123456789ABCDEF01234567 gpg test-sign`, and press `enter`, then "ctl-d"/"cmd-d" to finish.**
 
 The signed message will be printed to the terminal.
 
 <h4 id='verify-test-signature'>Step 3.3: Verify Test Signature</h4>
 
-``` shell
+```shell
 gpg --verify
 ```
 
 A prompt will ask for the message to verify.
 
-__Copy-Paste the signed message from above starting with `-----BEGIN PGP MESSAGE-----`, press `enter`, then "ctl-d"/"cmd-d" to finish.__
+**Copy-Paste the signed message from above starting with `-----BEGIN PGP MESSAGE-----`, press `enter`, then "ctl-d"/"cmd-d" to finish.**
 
 GPG will about a report to the terminal that tell you if the message was signed correctly, and the fingerprint of the key that signed the message.
 
@@ -428,13 +430,13 @@ Now that we have successfully generated your new key, we need to tell git about 
 
 <h3 id='add-key-to-git'>Add Signing Key to Git</h3>
 
-``` shell
+```shell
 $ git config --global --add user.signingkey 0123456789ABCDEF0123456789ABCDEF01234567
 ```
 
 <h3 id='auto-sign-commits'>Sign Commits By Default</h3>
 
-``` shell
+```shell
 $ git config --global --add commit.gpgSign true
 ```
 
@@ -448,7 +450,7 @@ Lastly it is good to add your gpg to your github or gitlab account. This will en
 
 The following command tell git to print to the console your gpg-public key:
 
-``` shell
+```shell
 $ gpg --armor --export 0123456789ABCDEF0123456789ABCDEF01234567
 ```
 
@@ -467,4 +469,3 @@ Under Profile select "GPG Keys", and add your gpg public key there.
 - How to revoke a user-id or sub-key, but not your entire gpg key.
 - How to store your primary gpg-key offline, and only have your subkeys online.
 - How to extend the expiry of your gpg key and rotate your subkeys.
-
