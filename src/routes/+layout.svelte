@@ -2,8 +2,8 @@
 	import 'open-props/style';
 	import 'open-props/normalize';
 	import 'open-props/buttons';
-	import Header from './header.svelte';
-	import Footer from './footer.svelte';
+	import Header from '$lib/components/Header.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 	import '../app.css';
 </script>
 
