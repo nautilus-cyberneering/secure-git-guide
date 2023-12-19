@@ -82,10 +82,6 @@
 		text-transform: capitalize;
 	}
 
-	a {
-		color: black;
-	}
-
 	@media (min-width: 768px) {
 		.articles-section {
 			display: flex;

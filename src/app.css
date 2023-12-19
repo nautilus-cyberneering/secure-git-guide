@@ -29,14 +29,6 @@ html {
 	--border-light: var(--gray-4);
 }
 
-a:hover {
-	color: #62629d;
-}
-
-a:visited {
-	color: #6464e2;
-}
-
 :root {
 	color-scheme: dark;
 
@@ -88,7 +80,7 @@ a:visited {
 		color: #000;
 	}
 	.post a {
-		color: #fff;
+		color: var(--text-1-dark);
 	}
 }
 
@@ -104,6 +96,9 @@ a:visited {
 	--surface-4: var(--surface-4-light);
 	--background: var(--background-light);
 	--border: var(--border-light);
+	.post a {
+		color: var(--text-1-light);
+	}
 }
 
 html,
